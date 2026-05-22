@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Qual é o seu dom? · Flama</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #F6F5F2;
+  --surface: #FFFFFF;
+  --border: #E4E3DF;
+  --text-1: #111110;
+  --text-2: #6B6A65;
+  --text-3: #A8A7A1;
+  --accent: #1D4ED8;
+  --accent-bg: #EFF6FF;
+  --accent-border: #BFDBFE;
+  --accent-text: #1E3A8A;
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  -webkit-font-smoothing: antialiased;
+}
+#app { max-width: 480px; margin: 0 auto; }
+.progress-track { height: 3px; background: var(--bg); position: sticky; top: 0; z-index: 10; }
+.progress-fill { height: 3px; background: var(--accent); transition: width 0.4s ease; }
+.section { padding: 1.75rem 1.25rem; }
+.center { text-align: center; }
+.title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 4px; }
+.subtitle { font-size: 14px; color: var(--text-2); margin-bottom: 2px; }
+.hint { font-size: 13px; color: var(--text-3); }
+.info-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.125rem;
+  font-size: 14px; color: var(--text-2);
+  line-height: 1.7; margin: 1.25rem 0 1.75rem;
+  text-align: left;
+}
+.info-box strong { color: var(--text-1); }
+.btn-primary {
+  display: block; width: 100%;
+  padding: 0.9375rem 1rem;
+  background: var(--accent); color: white;
+  border: none; border-radius: var(--radius-md);
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  letter-spacing: 0.1px;
+  transition: background 0.15s, transform 0.1s;
+  font-family: inherit;
+}
+.btn-primary:active { transform: scale(0.98); background: #1e40af; }
+.btn-ghost {
+  display: block; width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent; color: var(--text-2);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  font-size: 14px; cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+.btn-ghost:active { background: var(--surface); }
+.q-meta {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--text-3);
+  margin-bottom: 1.125rem;
+  font-variant-numeric: tabular-nums;
+}
+.q-text {
+  font-size: 17px; font-weight: 500;
+  line-height: 1.6; margin-bottom: 1.75rem;
+  min-height: 60px; letter-spacing: -0.1px;
+}
+.scale-options { display: flex; flex-direction: column; gap: 8px; }
+.scale-btn {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.875rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px; color: var(--text-1);
+  text-align: left; min-height: 50px; width: 100%;
+  transition: background 0.12s, border-color 0.12s, opacity 0.18s, transform 0.1s;
+  font-family: inherit;
+}
+.scale-btn:active { transform: scale(0.99); }
+.scale-btn.selected { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent-text); }
+.scale-btn.dimmed { opacity: 0.3; pointer-events: none; }
+.scale-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--bg); color: var(--text-3);
+  font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.12s, color 0.12s;
+}
+.scale-btn.selected .scale-num { background: var(--accent); color: white; }
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.125rem;
+  margin-bottom: 0.75rem;
+}
+.result-card.top { border-color: var(--accent-border); border-width: 2px; }
+.badge {
+  display: inline-block;
+  background: var(--accent-bg); color: var(--accent-text);
+  font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 100px;
+  margin-bottom: 0.75rem;
+}
+.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.625rem; }
+.card-icon { font-size: 22px; flex-shrink: 0; line-height: 1; }
+.card-name { font-weight: 600; font-size: 16px; flex: 1; }
+.card-score { font-size: 12px; color: var(--text-3); flex-shrink: 0; }
+.score-bar { height: 4px; background: var(--bg); border-radius: 2px; margin-bottom: 0.875rem; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+.card-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; margin-bottom: 0.5rem; }
+.card-verse { font-size: 12px; color: var(--text-3); }
+.all-scores-panel { display: none; margin: 0.5rem 0 0.75rem; }
+.score-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.score-row:last-child { border-bottom: none; }
+.si { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+.sn { flex: 1; color: var(--text-1); }
+.sb { width: 72px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.sf { height: 100%; border-radius: 2px; }
+.sv { font-size: 12px; color: var(--text-3); width: 24px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+.footer-quote { text-align: center; font-size: 13px; color: var(--text-3); font-style: italic; padding: 1.5rem 0 0.5rem; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const gifts=[
+ {id:1,  name:"Profecia",      icon:"🔥", verse:"Romanos 12:6",       desc:"Você não tem medo de falar a verdade — mesmo quando ninguém mais fala. Percebe as coisas antes dos outros e tem coragem de nomear o que está errado. É o dom de quem não deixa passar."},
+ {id:2,  name:"Serviço",       icon:"🛠️", verse:"Romanos 12:7",       desc:"Você age antes de alguém pedir. Enquanto os outros ficam conversando sobre o que precisa ser feito, você já foi lá e fez. Encontra satisfação real nas coisas que ninguém vê."},
+ {id:3,  name:"Ensino",        icon:"📖", verse:"Romanos 12:7",       desc:"Você consegue pegar algo complicado e explicar de um jeito que qualquer um entende. Não é só passar informação — é fazer a pessoa realmente pegar."},
+ {id:4,  name:"Exortação",     icon:"💛", verse:"Romanos 12:8",       desc:"Você é o tipo que as pessoas procuram quando estão no fundo do poço. Não pra resolver — pra levantar. Você enxerga o que os outros não veem em si mesmos. Era o dom de Barnabé."},
+ {id:5,  name:"Generosidade",  icon:"🎁", verse:"Romanos 12:8",       desc:"Você não segura. Quando tem algo pra dar — tempo, grana, energia — você dá. E sente uma alegria real nisso, especialmente quando consegue fazer sem aparecer."},
+ {id:6,  name:"Liderança",     icon:"🚩", verse:"Romanos 12:8",       desc:"Quando o grupo tá perdido, você naturalmente toma frente. Consegue ver o que precisa acontecer e mover as pessoas pra chegar lá — sem precisar de título ou permissão."},
+ {id:7,  name:"Misericórdia",  icon:"🤍", verse:"Romanos 12:8",       desc:"Você sente de verdade a dor do outro — não só na cabeça, no coração. E isso te move a estar presente, mesmo quando não tem nada prático a fazer."},
+ {id:8,  name:"Sabedoria",     icon:"💡", verse:"1 Coríntios 12:8",   desc:"Quando o rolo começa e ninguém sabe o que fazer, você costuma enxergar o caminho certo. As pessoas confiam no seu julgamento — e fazem bem em confiar."},
+ {id:9,  name:"Conhecimento",  icon:"👁️", verse:"1 Coríntios 12:8",   desc:"Às vezes você simplesmente sabe coisas que não tinha como saber. Uma percepção, uma impressão que veio do nada — e estava certa. Deus fala através de você assim."},
+ {id:10, name:"Fé",            icon:"⚓", verse:"1 Coríntios 12:9",   desc:"Você não desiste de crer. Quando todo mundo ao redor tá duvidando, você mantém uma confiança tranquila de que Deus vai aparecer — e essa confiança é contagiante."},
+ {id:11, name:"Cura",          icon:"💚", verse:"1 Coríntios 12:9",   desc:"Você tem uma compaixão específica por quem está doente — e uma fé real de que Deus pode intervir quando você ora. Não é só esperança vaga. É convicção."},
+ {id:12, name:"Milagres",      icon:"✨", verse:"1 Coríntios 12:10",  desc:"Você tem coragem de crer pelo impossível — de verdade, não só no discurso. E sente uma ousadia de declarar que Deus pode fazer o que parece completamente sem saída."},
+ {id:13, name:"Discernimento", icon:"🔍", verse:"1 Coríntios 12:10",  desc:"Você percebe o que está por baixo. Quando algo está espiritualmente errado, você sente antes de entender. As pessoas confiam em você pra ler as situações."},
+ {id:14, name:"Evangelismo",   icon:"🌍", verse:"Efésios 4:11",       desc:"Falar sobre Jesus com quem não conhece é natural pra você. Você consegue fazer isso de um jeito que não parece sermão — que faz sentido pra quem tá longe."},
+ {id:15, name:"Pastoreio",     icon:"🌿", verse:"Efésios 4:11",       desc:"Você cuida das pessoas ao redor — não só dos seus próprios problemas. Consegue caminhar com alguém numa jornada longa sem desistir. As pessoas te contam coisas que não contam pra ninguém."},
+ {id:16, name:"Hospitalidade", icon:"🏠", verse:"1 Pedro 4:9",        desc:"Você transforma qualquer ambiente num lugar onde as pessoas se sentem bem-vindas. Nota quem está sozinho. Vai até quem está desconfortável. Faz as pessoas sentirem que pertencem."},
+];
+
+// 32 perguntas — 2 por dom
+// Critério: mantidas as mais concretas e comportamentais de cada grupo
+const questions=[
+ {id:1,  giftId:1,  text:"Na hora que a galera tá fazendo algo errado ou injusto, você fala — mesmo sabendo que pode ser chato?"},
+ {id:2,  giftId:1,  text:"Já aconteceu de você falar algo pra alguém e a pessoa ficar tipo 'cara, como você sabia?' — como se você tivesse acertado em cheio?"},
+ {id:3,  giftId:2,  text:"Quando você vê algo precisando ser feito, você já vai lá e faz — sem esperar ninguém pedir?"},
+ {id:4,  giftId:2,  text:"Você curte fazer as coisas que ninguém vê — organizar, preparar, arrumar — mesmo sem receber crédito por isso?"},
+ {id:5,  giftId:3,  text:"Quando você entende uma matéria ou assunto, você fica com vontade de explicar pros outros de um jeito que eles peguem de verdade?"},
+ {id:6,  giftId:3,  text:"Seus amigos te chamam pra explicar as coisas quando não entenderam — porque sabem que você vai explicar de um jeito que eles vão entender?"},
+ {id:7,  giftId:4,  text:"Quando um amigo tá no fundo do poço, você naturalmente quer falar algo que levante ele — não só um 'vai ficar bem'?"},
+ {id:8,  giftId:4,  text:"As pessoas da sua vida te procuram quando estão passando mal — não pra você resolver o problema, mas porque falar com você já ajuda?"},
+ {id:9,  giftId:5,  text:"Quando você tem grana, tempo ou energia sobrando, seu instinto é usar pra ajudar alguém — não guardar só pra você?"},
+ {id:10, giftId:5,  text:"Você sente uma alegria real quando ajuda alguém — especialmente quando consegue fazer isso sem precisar que todo mundo saiba?"},
+ {id:11, giftId:6,  text:"Quando o grupo tá todo mundo perdido sem saber o que fazer, você é o tipo que começa a organizar e dar uma direção?"},
+ {id:12, giftId:6,  text:"Você consegue enxergar o que precisa acontecer pra uma situação funcionar — e tem facilidade de montar um plano e colocar em prática?"},
+ {id:13, giftId:7,  text:"Quando alguém tá sofrendo, você sente que o mais importante é estar do lado — não necessariamente resolver, só estar?"},
+ {id:14, giftId:7,  text:"Quando você vê alguém sozinho ou triste — mesmo sem conhecer direito — você sente dificuldade de simplesmente ignorar?"},
+ {id:15, giftId:8,  text:"Quando o rolo começa e ninguém sabe o que fazer, você costuma ter uma clareza do que seria o melhor caminho?"},
+ {id:16, giftId:8,  text:"Seus amigos ou família te pedem opinião em decisões importantes — não só porque você é amigo, mas porque confiam no seu julgamento?"},
+ {id:17, giftId:9,  text:"Já teve a sensação de saber algo sobre uma pessoa ou situação sem ter como explicar de onde veio esse conhecimento?"},
+ {id:18, giftId:9,  text:"Você já sentiu que Deus colocou no seu coração algo específico sobre alguém — uma impressão, um pensamento — e quando você orou ou falou, fez sentido?"},
+ {id:19, giftId:10, text:"Quando todo mundo ao redor tá duvidando que algo vai dar certo, você consegue manter uma confiança tranquila de que Deus vai aparecer?"},
+ {id:20, giftId:10, text:"As pessoas da sua vida falam de você como alguém que não desiste de crer — mesmo quando a situação parece perdida?"},
+ {id:21, giftId:11, text:"Quando alguém tá doente ou machucado, você sente uma vontade forte de orar por essa pessoa — com uma fé real de que Deus pode agir?"},
+ {id:22, giftId:11, text:"Você sente uma compaixão diferente por pessoas que estão doentes — e uma fé específica de que Deus pode intervir quando você ora por elas?"},
+ {id:23, giftId:12, text:"Você tem uma confiança real de que Deus pode fazer acontecer o que parece impossível — não só no discurso, mas de verdade?"},
+ {id:24, giftId:12, text:"Você já viveu uma situação em que claramente não tinha explicação natural pro que aconteceu — e você estava no meio disso?"},
+ {id:25, giftId:13, text:"Você costuma perceber quando tem algo espiritualmente errado numa situação, mesmo quando na superfície tudo parece normal?"},
+ {id:26, giftId:13, text:"Quando o grupo percebe que tem algo errado mas ninguém consegue apontar o quê, as pessoas olham pra você pra ler a situação?"},
+ {id:27, giftId:14, text:"Você tem facilidade de falar sobre Jesus com pessoas que não têm fé — sem travar, sem precisar de um roteiro?"},
+ {id:28, giftId:14, text:"Você consegue falar sobre fé de um jeito que faz sentido pra quem tá longe de Deus — sem soar como sermão e sem travar?"},
+ {id:29, giftId:15, text:"Você sente uma responsabilidade natural pelo crescimento espiritual das pessoas ao seu redor — não só pelos seus próprios problemas?"},
+ {id:30, giftId:15, text:"As pessoas costumam te contar coisas que não contam pra todo mundo — segredos, dores profundas — porque sentem que você realmente se importa?"},
+ {id:31, giftId:16, text:"Você curte receber pessoas, criar um ambiente gostoso — e sente algo especial quando consegue fazer alguém se sentir em casa?"},
+ {id:32, giftId:16, text:"Você nota quando alguém está sozinho ou desconfortável num ambiente — e seu instinto é ir até essa pessoa antes que alguém precise pedir?"},
+];
+
+const labels=["Não sou assim","Raramente","Às vezes","Frequentemente","Sou assim"];
+
+let screen='intro', current=0, answers={}, sel=null, busy=false;
+
+function scores(){
+  const s={};
+  gifts.forEach(g=>s[g.id]=0);
+  questions.forEach(q=>{if(answers[q.id])s[q.giftId]+=answers[q.id];});
+  return s;
+}
+function sorted(){
+  const s=scores();
+  return [...gifts].map(g=>({...g,score:s[g.id]})).sort((a,b)=>b.score-a.score);
+}
+
+function renderIntro(){
+  return`<div class="section center" style="padding-top:2.5rem">
+  <div style="font-size:52px;margin-bottom:1.25rem">🌟</div>
+  <h1 class="title">Qual é o seu dom?</h1>
+  <p class="subtitle">Farmando Aura com o Apóstolo Paulo</p>
+  <p class="hint" style="margin-bottom:0">Ep. 04 · Flama</p>
+  <div class="info-box">
+    <strong>32 perguntas · uns 5 minutinhos</strong><br><br>
+    Pra cada pergunta, escolhe um número de <strong>1</strong> (não sou assim) a <strong>5</strong> (sou exatamente assim).<br><br>
+    Responde com o que é verdade hoje — não tem resposta certa ou errada. Seja honesto!
+  </div>
+  <button class="btn-primary" onclick="start()">Começar →</button>
+</div>`;
+}
+
+function renderQuiz(){
+  const q=questions[current];
+  const pct=Math.round((current/questions.length)*100);
+  const opts=labels.map((l,i)=>{
+    const v=i+1;
+    const cls='scale-btn'+(sel===v?' selected':sel!==null?' dimmed':'');
+    return`<button class="${cls}" onclick="pick(${v})"><span>${l}</span><span class="scale-num">${v}</span></button>`;
+  }).join('');
+  return`<div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+<div class="section">
+  <div class="q-meta"><span>${current+1} de ${questions.length}</span><span>${pct}% concluído</span></div>
+  <p class="q-text">${q.text}</p>
+  <div class="scale-options">${opts}</div>
+</div>`;
+}
+
+function renderResults(){
+  const all=sorted();
+  const top=all.slice(0,3);
+  const cards=top.map((g,i)=>{
+    const pct=Math.round((g.score/10)*100);
+    return`<div class="result-card${i===0?' top':''}">
+  ${i===0?'<div class="badge">⭐ seu dom principal</div>':''}
+  <div class="card-header">
+    <span class="card-icon">${g.icon}</span>
+    <span class="card-name">${g.name}</span>
+    <span class="card-score">${g.score}/10</span>
+  </div>
+  <div class="score-bar"><div class="score-fill" style="width:${pct}%"></div></div>
+  <p class="card-desc">${g.desc}</p>
+  <p class="card-verse">${g.verse}</p>
+</div>`;
+  }).join('');
+
+  const rows=all.map((g,i)=>{
+    const pct=Math.round((g.score/10)*100);
+    const fill=i<3?'#1D4ED8':'#D1D1CD';
+    return`<div class="score-row">
+  <span class="si">${g.icon}</span>
+  <span class="sn">${g.name}</span>
+  <div class="sb"><div class="sf" style="width:${pct}%;background:${fill}"></div></div>
+  <span class="sv">${g.score}</span>
+</div>`;
+  }).join('');
+
+  return`<div class="section" style="padding-top:2.25rem">
+  <div class="center" style="margin-bottom:1.25rem">
+    <div style="font-size:44px;margin-bottom:0.875rem">🎯</div>
+    <h1 class="title">Seu perfil de dons</h1>
+    <p class="hint" style="margin-top:4px">Seus três dons com maior pontuação</p>
+  </div>
+  ${cards}
+  <p style="font-size:13px;color:var(--text-3);line-height:1.7;margin:1rem 0 1.25rem">
+    Isso não é um limite — é um ponto de partida. Dons crescem com o uso. Compartilha o resultado com seu líder e conversa sobre o que você descobriu!
+  </p>
+  <button class="btn-ghost" onclick="toggle()" id="tbtn" style="margin-bottom:0.625rem">ver pontuação dos 16 dons</button>
+  <div class="all-scores-panel" id="apanel">
+    <div style="margin:0.5rem 0 0.75rem">${rows}</div>
+    <div class="divider"></div>
+  </div>
+  <button class="btn-ghost" onclick="restart()">refazer o teste</button>
+  <p class="footer-quote">"A cada um é dada a manifestação do Espírito<br>para o proveito de todos."<br>— 1 Coríntios 12:7</p>
+</div>`;
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(screen==='intro') app.innerHTML=renderIntro();
+  else if(screen==='quiz') app.innerHTML=renderQuiz();
+  else app.innerHTML=renderResults();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function start(){ screen='quiz'; render(); }
+function pick(v){
+  if(busy) return;
+  busy=true; sel=v; render();
+  setTimeout(()=>{
+    answers[questions[current].id]=v;
+    sel=null; busy=false;
+    if(current+1<questions.length){ current++; render(); }
+    else{ screen='results'; render(); }
+  },340);
+}
+function toggle(){
+  const p=document.getElementById('apanel');
+  const b=document.getElementById('tbtn');
+  const open=p.style.display==='block';
+  p.style.display=open?'none':'block';
+  b.textContent=open?'ver pontuação dos 16 dons':'ocultar pontuação completa';
+}
+function restart(){
+  answers={}; current=0; sel=null; busy=false;
+  screen='intro'; render();
+}
+render();
+</script>
+</body>
+</html>
