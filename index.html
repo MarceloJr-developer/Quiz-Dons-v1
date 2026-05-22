@@ -4,141 +4,405 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Qual é o seu dom? · Flama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
 :root {
-  --bg: #F6F5F2;
-  --surface: #FFFFFF;
-  --border: #E4E3DF;
-  --text-1: #111110;
-  --text-2: #6B6A65;
-  --text-3: #A8A7A1;
-  --accent: #1D4ED8;
-  --accent-bg: #EFF6FF;
-  --accent-border: #BFDBFE;
-  --accent-text: #1E3A8A;
-  --radius-sm: 10px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --bg:         #F5F4EF;
+  --surface:    #EEEDE7;
+  --surface-2:  #E5E4DD;
+  --border:     #D8D7CF;
+  --border-2:   #C8C7BE;
+  --text-1:     #1A1A18;
+  --text-2:     #4A4A44;
+  --text-3:     #9A9990;
+  --ink:        #1A1A18;
+  --ink-bg:     #EEEAE0;
+  --blue:       #3B5BDB;
+  --blue-light: #E8ECFF;
+  --blue-dim:   #C5CEF7;
+  --radius-sm:  12px;
+  --radius-md:  16px;
+  --radius-lg:  20px;
+  --display:    'Bebas Neue', Impact, sans-serif;
+  --sans:       'DM Sans', system-ui, sans-serif;
 }
+
 html { scroll-behavior: smooth; }
+
 body {
   background: var(--bg);
   color: var(--text-1);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--sans);
   font-size: 16px;
   line-height: 1.5;
   min-height: 100vh;
-  padding-bottom: 4rem;
+  padding-bottom: 5rem;
   -webkit-font-smoothing: antialiased;
 }
+
 #app { max-width: 480px; margin: 0 auto; }
-.progress-track { height: 3px; background: var(--bg); position: sticky; top: 0; z-index: 10; }
-.progress-fill { height: 3px; background: var(--accent); transition: width 0.4s ease; }
-.section { padding: 1.75rem 1.25rem; }
-.center { text-align: center; }
-.title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 4px; }
-.subtitle { font-size: 14px; color: var(--text-2); margin-bottom: 2px; }
-.hint { font-size: 13px; color: var(--text-3); }
-.info-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 1rem 1.125rem;
-  font-size: 14px; color: var(--text-2);
-  line-height: 1.7; margin: 1.25rem 0 1.75rem;
-  text-align: left;
+
+/* ── PROGRESS ── */
+.progress-track {
+  height: 3px;
+  background: var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
 }
-.info-box strong { color: var(--text-1); }
+.progress-fill {
+  height: 3px;
+  background: var(--ink);
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── INTRO ── */
+.intro-wrap { padding: 2.75rem 1.375rem 2rem; }
+
+.flama-wordmark {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 2rem;
+  display: block;
+  font-weight: 600;
+}
+
+.intro-title {
+  font-family: var(--display);
+  font-size: clamp(64px, 18vw, 88px);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+
+.intro-title .highlight {
+  color: var(--blue);
+}
+
+.intro-sub {
+  font-size: 14px;
+  color: var(--text-3);
+  margin-bottom: 0;
+  letter-spacing: 0.01em;
+  font-style: italic;
+}
+
+.divider-line {
+  height: 1px;
+  background: var(--border-2);
+  margin: 2rem 0;
+}
+
+.info-block {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+.info-block strong { color: var(--text-1); font-weight: 600; }
+
+/* ── BUTTONS ── */
 .btn-primary {
-  display: block; width: 100%;
-  padding: 0.9375rem 1rem;
-  background: var(--accent); color: white;
-  border: none; border-radius: var(--radius-md);
-  font-size: 15px; font-weight: 600; cursor: pointer;
-  letter-spacing: 0.1px;
-  transition: background 0.15s, transform 0.1s;
-  font-family: inherit;
+  display: block;
+  width: 100%;
+  padding: 1.0625rem 1.25rem;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: opacity 0.15s, transform 0.1s;
 }
-.btn-primary:active { transform: scale(0.98); background: #1e40af; }
+.btn-primary:active { transform: scale(0.98); opacity: 0.88; }
+
 .btn-ghost {
-  display: block; width: 100%;
-  padding: 0.75rem 1rem;
-  background: transparent; color: var(--text-2);
-  border: 1px solid var(--border); border-radius: var(--radius-md);
-  font-size: 14px; cursor: pointer;
-  transition: background 0.15s;
-  font-family: inherit;
+  display: block;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: transparent;
+  color: var(--text-2);
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--radius-md);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
 .btn-ghost:active { background: var(--surface); }
+
+/* ── QUIZ ── */
+.quiz-wrap { padding: 1.5rem 1.375rem; }
+
 .q-meta {
-  display: flex; justify-content: space-between;
-  font-size: 12px; color: var(--text-3);
-  margin-bottom: 1.125rem;
-  font-variant-numeric: tabular-nums;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-bottom: 1.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
 }
+.q-num { color: var(--blue); }
+
 .q-text {
-  font-size: 17px; font-weight: 500;
-  line-height: 1.6; margin-bottom: 1.75rem;
-  min-height: 60px; letter-spacing: -0.1px;
+  font-family: var(--sans);
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 600;
+  line-height: 1.45;
+  margin-bottom: 2rem;
+  color: var(--text-1);
+  min-height: 80px;
 }
-.scale-options { display: flex; flex-direction: column; gap: 8px; }
+
+.q-text.slide-in {
+  animation: slideIn 0.25s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.scale-options { display: flex; flex-direction: column; gap: 7px; }
+
 .scale-btn {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0.875rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9375rem 1.125rem;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 14px; color: var(--text-1);
-  text-align: left; min-height: 50px; width: 100%;
-  transition: background 0.12s, border-color 0.12s, opacity 0.18s, transform 0.1s;
-  font-family: inherit;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-align: left;
+  min-height: 52px;
+  width: 100%;
+  transition: background 0.12s, border-color 0.12s, opacity 0.2s, transform 0.1s, color 0.12s;
+  gap: 12px;
 }
 .scale-btn:active { transform: scale(0.99); }
-.scale-btn.selected { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent-text); }
-.scale-btn.dimmed { opacity: 0.3; pointer-events: none; }
-.scale-num {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--bg); color: var(--text-3);
-  font-size: 12px; font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: background 0.12s, color 0.12s;
+.scale-btn.selected {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
 }
-.scale-btn.selected .scale-num { background: var(--accent); color: white; }
+.scale-btn.dimmed { opacity: 0.25; pointer-events: none; }
+.scale-label { flex: 1; }
+
+.scale-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.12s, color 0.12s;
+  font-family: var(--sans);
+}
+.scale-btn.selected .scale-num {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* ── RESULTS ── */
+.results-wrap { padding: 2rem 1.375rem; }
+
+.results-eyebrow {
+  font-size: 11px;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+}
+
+.results-title {
+  font-family: var(--display);
+  font-size: clamp(56px, 15vw, 76px);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.5rem;
+  color: var(--ink);
+}
+.results-title .highlight { color: var(--blue); }
+
+.results-sub {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-bottom: 2rem;
+}
+
+/* Hero card */
+.result-card-hero {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.375rem;
+  margin-bottom: 0.625rem;
+  animation: fadeUp 0.4s cubic-bezier(0.4,0,0.2,1) both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-bottom: 1.125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0.75rem;
+}
+.hero-icon { font-size: 28px; line-height: 1; flex-shrink: 0; }
+.hero-name {
+  font-family: var(--display);
+  font-size: 34px;
+  line-height: 1;
+  color: #FFFFFF;
+  flex: 1;
+  letter-spacing: 0.02em;
+}
+.hero-score {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.score-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 2px;
+  margin-bottom: 1.125rem;
+  overflow: hidden;
+}
+.score-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: #FFFFFF;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+.hero-desc {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.75;
+  margin-bottom: 0.75rem;
+}
+.hero-verse {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  font-style: italic;
+}
+
+/* Secondary cards */
 .result-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1rem 1.125rem;
-  margin-bottom: 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.125rem;
+  margin-bottom: 0.5rem;
+  animation: fadeUp 0.4s cubic-bezier(0.4,0,0.2,1) both;
 }
-.result-card.top { border-color: var(--accent-border); border-width: 2px; }
-.badge {
-  display: inline-block;
-  background: var(--accent-bg); color: var(--accent-text);
-  font-size: 11px; font-weight: 600;
-  padding: 3px 10px; border-radius: 100px;
-  margin-bottom: 0.75rem;
+.result-card:nth-child(1) { animation-delay: 0.07s; }
+.result-card:nth-child(2) { animation-delay: 0.14s; }
+
+.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+.card-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
+.card-name {
+  font-family: var(--display);
+  font-size: 22px;
+  line-height: 1;
+  flex: 1;
+  letter-spacing: 0.02em;
 }
-.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.625rem; }
-.card-icon { font-size: 22px; flex-shrink: 0; line-height: 1; }
-.card-name { font-weight: 600; font-size: 16px; flex: 1; }
-.card-score { font-size: 12px; color: var(--text-3); flex-shrink: 0; }
-.score-bar { height: 4px; background: var(--bg); border-radius: 2px; margin-bottom: 0.875rem; overflow: hidden; }
-.score-fill { height: 100%; border-radius: 2px; background: var(--accent); }
-.card-desc { font-size: 14px; color: var(--text-2); line-height: 1.65; margin-bottom: 0.5rem; }
-.card-verse { font-size: 12px; color: var(--text-3); }
-.all-scores-panel { display: none; margin: 0.5rem 0 0.75rem; }
-.score-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.card-score { font-size: 12px; color: var(--text-3); flex-shrink: 0; font-weight: 600; }
+
+.card-score-bar { height: 2px; background: var(--border); border-radius: 2px; margin-bottom: 0.75rem; overflow: hidden; }
+.card-score-fill { height: 100%; border-radius: 2px; background: var(--blue-dim); }
+
+.card-desc { font-size: 13px; color: var(--text-2); line-height: 1.72; margin-bottom: 0.4rem; }
+.card-verse { font-size: 11px; color: var(--text-3); font-style: italic; }
+
+/* All scores */
+.all-scores-panel { display: none; margin: 0.25rem 0 0.5rem; }
+
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
 .score-row:last-child { border-bottom: none; }
-.si { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
-.sn { flex: 1; color: var(--text-1); }
-.sb { width: 72px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
+.si { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.sn { flex: 1; color: var(--text-2); font-weight: 500; }
+.sb { width: 68px; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
 .sf { height: 100%; border-radius: 2px; }
-.sv { font-size: 12px; color: var(--text-3); width: 24px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-.divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
-.footer-quote { text-align: center; font-size: 13px; color: var(--text-3); font-style: italic; padding: 1.5rem 0 0.5rem; line-height: 1.7; }
+.sv { font-size: 12px; color: var(--text-3); width: 24px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+.results-note {
+  font-size: 13px;
+  color: var(--text-3);
+  line-height: 1.75;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.footer-quote {
+  text-align: center;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-3);
+  padding: 1.75rem 0 0.5rem;
+  line-height: 1.8;
+  font-family: var(--sans);
+}
+.footer-quote cite {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--border-2);
+  margin-top: 0.5rem;
+}
 </style>
 </head>
 <body>
@@ -163,8 +427,6 @@ const gifts=[
  {id:16, name:"Hospitalidade", icon:"🏠", verse:"1 Pedro 4:9",        desc:"Você transforma qualquer ambiente num lugar onde as pessoas se sentem bem-vindas. Nota quem está sozinho. Vai até quem está desconfortável. Faz as pessoas sentirem que pertencem."},
 ];
 
-// 32 perguntas — 2 por dom
-// Critério: mantidas as mais concretas e comportamentais de cada grupo
 const questions=[
  {id:1,  giftId:1,  text:"Na hora que a galera tá fazendo algo errado ou injusto, você fala — mesmo sabendo que pode ser chato?"},
  {id:2,  giftId:1,  text:"Já aconteceu de você falar algo pra alguém e a pessoa ficar tipo 'cara, como você sabia?' — como se você tivesse acertado em cheio?"},
@@ -216,16 +478,16 @@ function sorted(){
 }
 
 function renderIntro(){
-  return`<div class="section center" style="padding-top:2.5rem">
-  <div style="font-size:52px;margin-bottom:1.25rem">🌟</div>
-  <h1 class="title">Qual é o seu dom?</h1>
-  <p class="subtitle">Farmando Aura com o Apóstolo Paulo</p>
-  <p class="hint" style="margin-bottom:0">Ep. 04 · Flama</p>
-  <div class="info-box">
-    <strong>32 perguntas · uns 5 minutinhos</strong><br><br>
-    Pra cada pergunta, escolhe um número de <strong>1</strong> (não sou assim) a <strong>5</strong> (sou exatamente assim).<br><br>
-    Responde com o que é verdade hoje — não tem resposta certa ou errada. Seja honesto!
-  </div>
+  return`<div class="intro-wrap">
+  <span class="flama-wordmark">Flama · Ep. 04</span>
+  <h1 class="intro-title">QUAL É<br>O SEU<br><span class="highlight">DOM?</span></h1>
+  <p class="intro-sub">Farmando Aura com o Apóstolo Paulo</p>
+  <div class="divider-line"></div>
+  <p class="info-block">
+    <strong>32 perguntas · uns 5 minutinhos</strong><br>
+    Pra cada pergunta, escolhe de <strong>1</strong> (não sou assim) a <strong>5</strong> (sou exatamente assim).<br>
+    Responde com o que é verdade hoje — não tem resposta certa ou errada.
+  </p>
   <button class="btn-primary" onclick="start()">Começar →</button>
 </div>`;
 }
@@ -236,37 +498,34 @@ function renderQuiz(){
   const opts=labels.map((l,i)=>{
     const v=i+1;
     const cls='scale-btn'+(sel===v?' selected':sel!==null?' dimmed':'');
-    return`<button class="${cls}" onclick="pick(${v})"><span>${l}</span><span class="scale-num">${v}</span></button>`;
+    return`<button class="${cls}" onclick="pick(${v})">
+      <span class="scale-label">${l}</span>
+      <span class="scale-num">${v}</span>
+    </button>`;
   }).join('');
   return`<div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-<div class="section">
-  <div class="q-meta"><span>${current+1} de ${questions.length}</span><span>${pct}% concluído</span></div>
-  <p class="q-text">${q.text}</p>
+<div class="quiz-wrap">
+  <div class="q-meta">
+    <span class="q-num">${current+1} <span style="color:var(--text-3)">/ ${questions.length}</span></span>
+    <span>${pct}% concluído</span>
+  </div>
+  <p class="q-text slide-in">${q.text}</p>
   <div class="scale-options">${opts}</div>
 </div>`;
 }
 
 function renderResults(){
   const all=sorted();
-  const top=all.slice(0,3);
-  const cards=top.map((g,i)=>{
-    const pct=Math.round((g.score/10)*100);
-    return`<div class="result-card${i===0?' top':''}">
-  ${i===0?'<div class="badge">⭐ seu dom principal</div>':''}
-  <div class="card-header">
-    <span class="card-icon">${g.icon}</span>
-    <span class="card-name">${g.name}</span>
-    <span class="card-score">${g.score}/10</span>
-  </div>
-  <div class="score-bar"><div class="score-fill" style="width:${pct}%"></div></div>
-  <p class="card-desc">${g.desc}</p>
-  <p class="card-verse">${g.verse}</p>
-</div>`;
-  }).join('');
+  const top=all[0];
+  const second=all[1];
+  const third=all[2];
+  const topPct=Math.round((top.score/10)*100);
+  const secPct=Math.round((second.score/10)*100);
+  const thiPct=Math.round((third.score/10)*100);
 
   const rows=all.map((g,i)=>{
     const pct=Math.round((g.score/10)*100);
-    const fill=i<3?'#1D4ED8':'#D1D1CD';
+    const fill=i<3?'#1A1A18':'#C8C7BE';
     return`<div class="score-row">
   <span class="si">${g.icon}</span>
   <span class="sn">${g.name}</span>
@@ -275,23 +534,58 @@ function renderResults(){
 </div>`;
   }).join('');
 
-  return`<div class="section" style="padding-top:2.25rem">
-  <div class="center" style="margin-bottom:1.25rem">
-    <div style="font-size:44px;margin-bottom:0.875rem">🎯</div>
-    <h1 class="title">Seu perfil de dons</h1>
-    <p class="hint" style="margin-top:4px">Seus três dons com maior pontuação</p>
+  return`<div class="results-wrap">
+  <p class="results-eyebrow">Seu resultado</p>
+  <h1 class="results-title">SEU<br>PERFIL<br><span class="highlight">DE DONS</span></h1>
+  <p class="results-sub">Seus três dons com maior pontuação</p>
+
+  <div class="result-card-hero">
+    <div class="hero-badge">⭐ Dom principal</div>
+    <div class="hero-header">
+      <span class="hero-icon">${top.icon}</span>
+      <span class="hero-name">${top.name.toUpperCase()}</span>
+      <span class="hero-score">${top.score}/10</span>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:${topPct}%"></div></div>
+    <p class="hero-desc">${top.desc}</p>
+    <p class="hero-verse">${top.verse}</p>
   </div>
-  ${cards}
-  <p style="font-size:13px;color:var(--text-3);line-height:1.7;margin:1rem 0 1.25rem">
-    Isso não é um limite — é um ponto de partida. Dons crescem com o uso. Compartilha o resultado com seu líder e conversa sobre o que você descobriu!
-  </p>
-  <button class="btn-ghost" onclick="toggle()" id="tbtn" style="margin-bottom:0.625rem">ver pontuação dos 16 dons</button>
+
+  <div class="result-card">
+    <div class="card-header">
+      <span class="card-icon">${second.icon}</span>
+      <span class="card-name">${second.name}</span>
+      <span class="card-score">${second.score}/10</span>
+    </div>
+    <div class="card-score-bar"><div class="card-score-fill" style="width:${secPct}%"></div></div>
+    <p class="card-desc">${second.desc}</p>
+    <p class="card-verse">${second.verse}</p>
+  </div>
+
+  <div class="result-card">
+    <div class="card-header">
+      <span class="card-icon">${third.icon}</span>
+      <span class="card-name">${third.name}</span>
+      <span class="card-score">${third.score}/10</span>
+    </div>
+    <div class="card-score-bar"><div class="card-score-fill" style="width:${thiPct}%"></div></div>
+    <p class="card-desc">${third.desc}</p>
+    <p class="card-verse">${third.verse}</p>
+  </div>
+
+  <p class="results-note">Isso não é um limite — é um ponto de partida. Dons crescem com o uso. Compartilha o resultado com seu líder e conversa sobre o que você descobriu!</p>
+
+  <button class="btn-ghost" onclick="toggle()" id="tbtn" style="margin-bottom:0.5rem">ver pontuação dos 16 dons</button>
   <div class="all-scores-panel" id="apanel">
     <div style="margin:0.5rem 0 0.75rem">${rows}</div>
-    <div class="divider"></div>
   </div>
+  <div style="height:0.5rem"></div>
   <button class="btn-ghost" onclick="restart()">refazer o teste</button>
-  <p class="footer-quote">"A cada um é dada a manifestação do Espírito<br>para o proveito de todos."<br>— 1 Coríntios 12:7</p>
+
+  <p class="footer-quote">
+    "A cada um é dada a manifestação do Espírito para o proveito de todos."
+    <cite>— 1 Coríntios 12:7</cite>
+  </p>
 </div>`;
 }
 
