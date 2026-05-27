@@ -1,624 +1,870 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Qual é o seu dom? · Flama</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Os Cinco Ministérios</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #080C1A;
+    color: #E8E0D0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
 
-:root {
-  --bg:         #F5F4EF;
-  --surface:    #EEEDE7;
-  --surface-2:  #E5E4DD;
-  --border:     #D8D7CF;
-  --border-2:   #C8C7BE;
-  --text-1:     #1A1A18;
-  --text-2:     #4A4A44;
-  --text-3:     #9A9990;
-  --ink:        #1A1A18;
-  --ink-bg:     #EEEAE0;
-  --blue:       #3B5BDB;
-  --blue-light: #E8ECFF;
-  --blue-dim:   #C5CEF7;
-  --radius-sm:  12px;
-  --radius-md:  16px;
-  --radius-lg:  20px;
-  --display:    'Bebas Neue', Impact, sans-serif;
-  --sans:       'DM Sans', system-ui, sans-serif;
-}
+  /* ── Layout ── */
+  .screen { display: none; min-height: 100vh; padding: 32px 20px 60px; }
+  .screen.active { display: flex; flex-direction: column; align-items: center; }
+  .container { width: 100%; max-width: 620px; }
 
-html { scroll-behavior: smooth; }
+  /* ── Typography ── */
+  .cinzel { font-family: 'Cinzel', serif; }
+  .label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(212,168,83,0.65);
+    text-transform: uppercase;
+  }
 
-body {
-  background: var(--bg);
-  color: var(--text-1);
-  font-family: var(--sans);
-  font-size: 16px;
-  line-height: 1.5;
-  min-height: 100vh;
-  padding-bottom: 5rem;
-  -webkit-font-smoothing: antialiased;
-}
+  /* ── Intro ── */
+  #screen-intro .container { max-width: 560px; text-align: center; }
+  .intro-divider-v { width: 1px; height: 56px; background: linear-gradient(180deg, transparent, rgba(212,168,83,0.45), transparent); margin: 0 auto 32px; }
+  .intro-title { font-family: 'Cinzel', serif; font-size: clamp(26px,6vw,40px); font-weight: 600; line-height: 1.2; color: #F5EDD8; margin-bottom: 18px; letter-spacing: 1px; }
+  .intro-divider-h { width: 70px; height: 1px; background: linear-gradient(90deg, transparent, #D4A853, transparent); margin: 0 auto 22px; }
+  .intro-desc { font-size: 19px; line-height: 1.8; color: rgba(232,224,208,0.62); margin-bottom: 10px; }
+  .intro-meta { font-size: 14px; color: rgba(212,168,83,0.6); font-style: italic; margin-bottom: 44px; }
+  .ministry-preview { display: flex; justify-content: center; gap: clamp(14px,4vw,34px); margin-bottom: 48px; flex-wrap: wrap; }
+  .ministry-badge { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .ministry-badge-icon { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  .ministry-badge-name { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 1.5px; }
+  .btn-start {
+    background: linear-gradient(135deg, #D4A853, #B8892E);
+    color: #080C1A; border: none; padding: 17px 58px;
+    font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 3px;
+    cursor: pointer; border-radius: 4px; font-weight: 700;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-start:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(212,168,83,0.3); }
+  .intro-note { margin-top: 26px; font-size: 13px; color: rgba(232,224,208,0.22); font-style: italic; line-height: 1.6; }
+  .intro-divider-v-bottom { width: 1px; height: 50px; background: linear-gradient(180deg, rgba(212,168,83,0.25), transparent); margin: 36px auto 0; }
 
-#app { max-width: 480px; margin: 0 auto; }
+  /* ── Quiz ── */
+  .progress-bar-track { height: 2px; background: rgba(255,255,255,0.05); border-radius: 1px; margin-bottom: 34px; }
+  .progress-bar-fill { height: 100%; border-radius: 1px; transition: width .4s ease; }
+  .quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 34px; }
+  .block-label { display: flex; align-items: center; gap: 8px; }
+  .block-icon { font-size: 17px; }
+  .block-name { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2.5px; }
+  .q-counter { font-family: 'Cinzel', serif; font-size: 11px; color: rgba(232,224,208,0.25); }
+  .question-text { font-size: clamp(19px,3.5vw,25px); line-height: 1.55; font-weight: 400; color: #F5EDD8; margin-bottom: 30px; transition: opacity .18s, transform .18s; }
+  .question-text.hidden { opacity: 0; transform: translateY(8px); }
+  .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .option-btn {
+    width: 100%; text-align: left; cursor: pointer;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(232,224,208,0.1);
+    border-radius: 8px; padding: 15px 20px;
+    color: rgba(232,224,208,0.78);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px; line-height: 1.55;
+    transition: background .18s, border-color .18s, color .18s, transform .18s;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .option-btn:hover { background: rgba(212,168,83,0.07); border-color: rgba(212,168,83,0.38); color: #E8E0D0; transform: translateX(5px); }
+  .option-btn.selected { background: rgba(212,168,83,0.11); border-color: rgba(212,168,83,0.55); color: #F0D890; }
+  .option-letter { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 1px; color: rgba(212,168,83,0.35); min-width: 20px; padding-top: 2px; transition: color .18s; }
+  .option-btn.selected .option-letter { color: rgba(212,168,83,0.7); }
+  .quiz-footer { display: flex; justify-content: flex-end; }
+  .btn-next {
+    background: linear-gradient(135deg, #D4A853, #B8892E);
+    color: #080C1A; border: none; padding: 13px 42px;
+    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 2.5px;
+    cursor: pointer; border-radius: 4px; font-weight: 600;
+    transition: transform .2s, box-shadow .2s, opacity .2s;
+  }
+  .btn-next:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+  .btn-next:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,168,83,0.28); }
+  .block-dots { display: flex; justify-content: center; gap: 7px; margin-top: 44px; }
+  .block-dot { height: 3px; border-radius: 2px; transition: width .35s ease, background .35s ease; }
 
-/* ── PROGRESS ── */
-.progress-track {
-  height: 3px;
-  background: var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--bg);
-}
-.progress-fill {
-  height: 3px;
-  background: var(--ink);
-  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-}
+  /* ── Results ── */
+  .result-header { text-align: center; margin-bottom: 40px; animation: fadeUp .4s ease; }
+  .result-icon { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 42px; margin: 0 auto 20px; }
+  .result-ministry-name { font-family: 'Cinzel', serif; font-size: clamp(24px,5vw,36px); font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
+  .result-subtitle { font-size: 20px; color: rgba(232,224,208,0.5); font-style: italic; margin-bottom: 22px; }
+  .result-score-badge { display: inline-flex; align-items: center; gap: 10px; border-radius: 6px; padding: 9px 22px; }
+  .result-score-num { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 600; }
+  .result-score-denom { font-size: 17px; color: rgba(232,224,208,0.4); }
+  .tabs { display: flex; gap: 7px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center; }
+  .tab-btn {
+    background: transparent; border: 1px solid rgba(232,224,208,0.14);
+    color: rgba(232,224,208,0.45); padding: 8px 17px;
+    font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 1.8px;
+    cursor: pointer; border-radius: 3px; transition: all .18s;
+  }
+  .tab-btn:hover { border-color: rgba(232,224,208,0.28); color: rgba(232,224,208,0.7); }
+  .tab-btn.active { background: rgba(212,168,83,0.1); border-color: rgba(212,168,83,0.38); color: #D4A853; }
+  .tab-panel { display: none; animation: fadeUp .3s ease; }
+  .tab-panel.active { display: block; }
 
-/* ── INTRO ── */
-.intro-wrap { padding: 2.75rem 1.375rem 2rem; }
+  /* Result cards */
+  .card { background: rgba(255,255,255,0.02); border: 1px solid rgba(232,224,208,0.08); border-radius: 8px; padding: 20px 24px; margin-bottom: 20px; }
+  .card-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2.5px; color: rgba(232,224,208,0.3); margin-bottom: 12px; }
+  .card-text { font-size: 18px; line-height: 1.8; }
+  .card-colored { border-radius: 10px; padding: 22px 26px; margin-bottom: 20px; }
+  .verse-block { border-left: 3px solid; padding-left: 22px; margin-bottom: 20px; }
+  .verse-text { font-size: 18px; line-height: 1.75; font-style: italic; color: rgba(232,224,208,0.72); margin-bottom: 10px; }
+  .verse-ref { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 1.5px; color: rgba(232,224,208,0.35); }
+  .strength-item, .blind-item { display: flex; gap: 16px; padding: 17px 20px; border-radius: 8px; margin-bottom: 12px; align-items: flex-start; }
+  .item-num { font-family: 'Cinzel', serif; font-size: 14px; min-width: 26px; padding-top: 2px; }
+  .item-text { font-size: 18px; line-height: 1.5; }
+  .shadow-card { padding: 20px 24px; border-radius: 8px; margin-top: 28px; }
+  .shadow-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; margin-bottom: 12px; }
+  .shadow-text { font-size: 17px; line-height: 1.8; font-style: italic; color: rgba(232,224,208,0.72); }
+  .score-row { margin-bottom: 22px; }
+  .score-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .score-ministry { display: flex; align-items: center; gap: 9px; }
+  .score-name { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.8px; }
+  .score-badge { font-size: 10px; padding: 2px 9px; border-radius: 3px; font-family: 'Cinzel', serif; letter-spacing: 1px; }
+  .score-val { color: rgba(232,224,208,0.45); font-size: 15px; font-family: 'Cinzel', serif; }
+  .score-track { height: 5px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 3px; width: 0; transition: width 1.1s cubic-bezier(.22,1,.36,1); }
+  .complements-row { display: flex; gap: 12px; }
+  .complement-card { flex: 1; border-radius: 6px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+  .complement-icon { font-size: 22px; }
+  .complement-name { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.5px; margin-bottom: 2px; }
+  .complement-sub { font-size: 12px; color: rgba(232,224,208,0.45); font-style: italic; }
+  .secondary-card { border-radius: 8px; padding: 16px 20px; }
+  .secondary-row { display: flex; align-items: center; gap: 14px; }
+  .secondary-icon { font-size: 30px; }
+  .secondary-info { flex: 1; }
+  .secondary-name { font-family: 'Cinzel', serif; font-size: 16px; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .secondary-sub { font-size: 15px; color: rgba(232,224,208,0.5); font-style: italic; }
+  .secondary-pts { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 600; }
+  .dist-card { padding: 20px 24px; background: rgba(255,255,255,0.02); border: 1px solid rgba(232,224,208,0.07); border-radius: 8px; margin-top: 40px; }
+  .btn-restart {
+    background: transparent; border: 1px solid rgba(232,224,208,0.17);
+    color: rgba(232,224,208,0.5); padding: 12px 34px;
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px;
+    cursor: pointer; border-radius: 3px; transition: all .2s;
+  }
+  .btn-restart:hover { border-color: rgba(232,224,208,0.35); color: rgba(232,224,208,0.75); }
+  .restart-wrap { text-align: center; margin-top: 52px; }
+  .restart-divider { width: 1px; height: 44px; background: linear-gradient(180deg, rgba(212,168,83,0.2), transparent); margin: 0 auto 26px; }
 
-.flama-wordmark {
-  font-family: var(--sans);
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--blue);
-  margin-bottom: 2rem;
-  display: block;
-  font-weight: 600;
-}
+  /* ── Animations ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-.intro-title {
-  font-family: var(--display);
-  font-size: clamp(64px, 18vw, 88px);
-  line-height: 0.92;
-  letter-spacing: 0.01em;
-  margin-bottom: 1rem;
-  color: var(--ink);
-}
-
-.intro-title .highlight {
-  color: var(--blue);
-}
-
-.intro-sub {
-  font-size: 14px;
-  color: var(--text-3);
-  margin-bottom: 0;
-  letter-spacing: 0.01em;
-  font-style: italic;
-}
-
-.divider-line {
-  height: 1px;
-  background: var(--border-2);
-  margin: 2rem 0;
-}
-
-.info-block {
-  font-size: 14px;
-  color: var(--text-2);
-  line-height: 1.8;
-  margin-bottom: 2rem;
-}
-.info-block strong { color: var(--text-1); font-weight: 600; }
-
-/* ── BUTTONS ── */
-.btn-primary {
-  display: block;
-  width: 100%;
-  padding: 1.0625rem 1.25rem;
-  background: var(--ink);
-  color: var(--bg);
-  border: none;
-  border-radius: var(--radius-md);
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  letter-spacing: 0.03em;
-  transition: opacity 0.15s, transform 0.1s;
-}
-.btn-primary:active { transform: scale(0.98); opacity: 0.88; }
-
-.btn-ghost {
-  display: block;
-  width: 100%;
-  padding: 0.875rem 1.25rem;
-  background: transparent;
-  color: var(--text-2);
-  border: 1.5px solid var(--border-2);
-  border-radius: var(--radius-md);
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-.btn-ghost:active { background: var(--surface); }
-
-/* ── QUIZ ── */
-.quiz-wrap { padding: 1.5rem 1.375rem; }
-
-.q-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--text-3);
-  margin-bottom: 1.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-.q-num { color: var(--blue); }
-
-.q-text {
-  font-family: var(--sans);
-  font-size: clamp(18px, 5vw, 22px);
-  font-weight: 600;
-  line-height: 1.45;
-  margin-bottom: 2rem;
-  color: var(--text-1);
-  min-height: 80px;
-}
-
-.q-text.slide-in {
-  animation: slideIn 0.25s cubic-bezier(0.4,0,0.2,1) forwards;
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(16px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-.scale-options { display: flex; flex-direction: column; gap: 7px; }
-
-.scale-btn {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.9375rem 1.125rem;
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-2);
-  text-align: left;
-  min-height: 52px;
-  width: 100%;
-  transition: background 0.12s, border-color 0.12s, opacity 0.2s, transform 0.1s, color 0.12s;
-  gap: 12px;
-}
-.scale-btn:active { transform: scale(0.99); }
-.scale-btn.selected {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--bg);
-}
-.scale-btn.dimmed { opacity: 0.25; pointer-events: none; }
-.scale-label { flex: 1; }
-
-.scale-num {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--surface-2);
-  color: var(--text-3);
-  font-size: 12px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.12s, color 0.12s;
-  font-family: var(--sans);
-}
-.scale-btn.selected .scale-num {
-  background: var(--bg);
-  color: var(--ink);
-}
-
-/* ── RESULTS ── */
-.results-wrap { padding: 2rem 1.375rem; }
-
-.results-eyebrow {
-  font-size: 11px;
-  color: var(--blue);
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-weight: 600;
-  margin-bottom: 0.375rem;
-}
-
-.results-title {
-  font-family: var(--display);
-  font-size: clamp(56px, 15vw, 76px);
-  line-height: 0.92;
-  letter-spacing: 0.01em;
-  margin-bottom: 0.5rem;
-  color: var(--ink);
-}
-.results-title .highlight { color: var(--blue); }
-
-.results-sub {
-  font-size: 13px;
-  color: var(--text-3);
-  margin-bottom: 2rem;
-}
-
-/* Hero card */
-.result-card-hero {
-  background: var(--ink);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem 1.375rem;
-  margin-bottom: 0.625rem;
-  animation: fadeUp 0.4s cubic-bezier(0.4,0,0.2,1) both;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.7);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 100px;
-  margin-bottom: 1.125rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.hero-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 0.75rem;
-}
-.hero-icon { font-size: 28px; line-height: 1; flex-shrink: 0; }
-.hero-name {
-  font-family: var(--display);
-  font-size: 34px;
-  line-height: 1;
-  color: #FFFFFF;
-  flex: 1;
-  letter-spacing: 0.02em;
-}
-.hero-score {
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.score-bar {
-  height: 3px;
-  background: rgba(255,255,255,0.12);
-  border-radius: 2px;
-  margin-bottom: 1.125rem;
-  overflow: hidden;
-}
-.score-fill {
-  height: 100%;
-  border-radius: 2px;
-  background: #FFFFFF;
-  transition: width 1s cubic-bezier(0.4,0,0.2,1);
-}
-
-.hero-desc {
-  font-size: 14px;
-  color: rgba(255,255,255,0.65);
-  line-height: 1.75;
-  margin-bottom: 0.75rem;
-}
-.hero-verse {
-  font-size: 12px;
-  color: rgba(255,255,255,0.35);
-  font-style: italic;
-}
-
-/* Secondary cards */
-.result-card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 1.125rem;
-  margin-bottom: 0.5rem;
-  animation: fadeUp 0.4s cubic-bezier(0.4,0,0.2,1) both;
-}
-.result-card:nth-child(1) { animation-delay: 0.07s; }
-.result-card:nth-child(2) { animation-delay: 0.14s; }
-
-.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
-.card-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
-.card-name {
-  font-family: var(--display);
-  font-size: 22px;
-  line-height: 1;
-  flex: 1;
-  letter-spacing: 0.02em;
-}
-.card-score { font-size: 12px; color: var(--text-3); flex-shrink: 0; font-weight: 600; }
-
-.card-score-bar { height: 2px; background: var(--border); border-radius: 2px; margin-bottom: 0.75rem; overflow: hidden; }
-.card-score-fill { height: 100%; border-radius: 2px; background: var(--blue-dim); }
-
-.card-desc { font-size: 13px; color: var(--text-2); line-height: 1.72; margin-bottom: 0.4rem; }
-.card-verse { font-size: 11px; color: var(--text-3); font-style: italic; }
-
-/* All scores */
-.all-scores-panel { display: none; margin: 0.25rem 0 0.5rem; }
-
-.score-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-.score-row:last-child { border-bottom: none; }
-.si { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
-.sn { flex: 1; color: var(--text-2); font-weight: 500; }
-.sb { width: 68px; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
-.sf { height: 100%; border-radius: 2px; }
-.sv { font-size: 12px; color: var(--text-3); width: 24px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; font-weight: 600; }
-
-.results-note {
-  font-size: 13px;
-  color: var(--text-3);
-  line-height: 1.75;
-  margin: 1.25rem 0 1.5rem;
-}
-
-.footer-quote {
-  text-align: center;
-  font-size: 14px;
-  font-style: italic;
-  color: var(--text-3);
-  padding: 1.75rem 0 0.5rem;
-  line-height: 1.8;
-  font-family: var(--sans);
-}
-.footer-quote cite {
-  display: block;
-  font-style: normal;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--border-2);
-  margin-top: 0.5rem;
-}
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #080C1A; }
+  ::-webkit-scrollbar-thumb { background: rgba(212,168,83,0.25); border-radius: 2px; }
 </style>
 </head>
 <body>
-<div id="app"></div>
+
+<!-- ══ INTRO ═══════════════════════════════════════════════════════ -->
+<div id="screen-intro" class="screen active">
+  <div class="container">
+    <div class="intro-divider-v"></div>
+    <p class="label" style="margin-bottom:18px;">Efésios 4:11–12</p>
+    <h1 class="intro-title">Os Cinco Ministérios</h1>
+    <div class="intro-divider-h"></div>
+    <p class="intro-desc">Um quiz completo para líderes e adultos que querem entender como Cristo age através deles para edificar seu corpo.</p>
+    <p class="intro-meta">32 perguntas · 9 blocos · ~10 minutos</p>
+    <div class="ministry-preview" id="ministry-preview"></div>
+    <button class="btn-start" onclick="startQuiz()">INICIAR</button>
+    <p class="intro-note">Não há respostas certas ou erradas.<br>Escolha o que mais ressoa com quem você é,<br>não com quem você quer ser.</p>
+    <div class="intro-divider-v-bottom"></div>
+  </div>
+</div>
+
+<!-- ══ QUIZ ════════════════════════════════════════════════════════ -->
+<div id="screen-quiz" class="screen">
+  <div class="container">
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
+    <div class="quiz-meta">
+      <div class="block-label">
+        <span class="block-icon" id="block-icon"></span>
+        <span class="block-name" id="block-name"></span>
+      </div>
+      <span class="q-counter" id="q-counter"></span>
+    </div>
+    <div id="question-wrap">
+      <p class="question-text" id="question-text"></p>
+      <div class="options-list" id="options-list"></div>
+      <div class="quiz-footer">
+        <button class="btn-next" id="btn-next" disabled onclick="nextQuestion()">PRÓXIMA →</button>
+      </div>
+    </div>
+    <div class="block-dots" id="block-dots"></div>
+  </div>
+</div>
+
+<!-- ══ RESULTS ═════════════════════════════════════════════════════ -->
+<div id="screen-results" class="screen">
+  <div class="container">
+    <div class="result-header" id="result-header"></div>
+    <div class="tabs" id="tabs"></div>
+    <div id="tab-panels"></div>
+    <div class="restart-wrap">
+      <div class="restart-divider"></div>
+      <button class="btn-restart" onclick="restartQuiz()">REFAZER O QUIZ</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const gifts=[
- {id:1,  name:"Profecia",      icon:"🔥", verse:"Romanos 12:6",       desc:"Você não tem medo de falar a verdade — mesmo quando ninguém mais fala. Percebe as coisas antes dos outros e tem coragem de nomear o que está errado. É o dom de quem não deixa passar."},
- {id:2,  name:"Serviço",       icon:"🛠️", verse:"Romanos 12:7",       desc:"Você age antes de alguém pedir. Enquanto os outros ficam conversando sobre o que precisa ser feito, você já foi lá e fez. Encontra satisfação real nas coisas que ninguém vê."},
- {id:3,  name:"Ensino",        icon:"📖", verse:"Romanos 12:7",       desc:"Você consegue pegar algo complicado e explicar de um jeito que qualquer um entende. Não é só passar informação — é fazer a pessoa realmente pegar."},
- {id:4,  name:"Exortação",     icon:"💛", verse:"Romanos 12:8",       desc:"Você é o tipo que as pessoas procuram quando estão no fundo do poço. Não pra resolver — pra levantar. Você enxerga o que os outros não veem em si mesmos. Era o dom de Barnabé."},
- {id:5,  name:"Generosidade",  icon:"🎁", verse:"Romanos 12:8",       desc:"Você não segura. Quando tem algo pra dar — tempo, grana, energia — você dá. E sente uma alegria real nisso, especialmente quando consegue fazer sem aparecer."},
- {id:6,  name:"Liderança",     icon:"🚩", verse:"Romanos 12:8",       desc:"Quando o grupo tá perdido, você naturalmente toma frente. Consegue ver o que precisa acontecer e mover as pessoas pra chegar lá — sem precisar de título ou permissão."},
- {id:7,  name:"Misericórdia",  icon:"🤍", verse:"Romanos 12:8",       desc:"Você sente de verdade a dor do outro — não só na cabeça, no coração. E isso te move a estar presente, mesmo quando não tem nada prático a fazer."},
- {id:8,  name:"Sabedoria",     icon:"💡", verse:"1 Coríntios 12:8",   desc:"Quando o rolo começa e ninguém sabe o que fazer, você costuma enxergar o caminho certo. As pessoas confiam no seu julgamento — e fazem bem em confiar."},
- {id:9,  name:"Conhecimento",  icon:"👁️", verse:"1 Coríntios 12:8",   desc:"Às vezes você simplesmente sabe coisas que não tinha como saber. Uma percepção, uma impressão que veio do nada — e estava certa. Deus fala através de você assim."},
- {id:10, name:"Fé",            icon:"⚓", verse:"1 Coríntios 12:9",   desc:"Você não desiste de crer. Quando todo mundo ao redor tá duvidando, você mantém uma confiança tranquila de que Deus vai aparecer — e essa confiança é contagiante."},
- {id:11, name:"Cura",          icon:"💚", verse:"1 Coríntios 12:9",   desc:"Você tem uma compaixão específica por quem está doente — e uma fé real de que Deus pode intervir quando você ora. Não é só esperança vaga. É convicção."},
- {id:12, name:"Milagres",      icon:"✨", verse:"1 Coríntios 12:10",  desc:"Você tem coragem de crer pelo impossível — de verdade, não só no discurso. E sente uma ousadia de declarar que Deus pode fazer o que parece completamente sem saída."},
- {id:13, name:"Discernimento", icon:"🔍", verse:"1 Coríntios 12:10",  desc:"Você percebe o que está por baixo. Quando algo está espiritualmente errado, você sente antes de entender. As pessoas confiam em você pra ler as situações."},
- {id:14, name:"Evangelismo",   icon:"🌍", verse:"Efésios 4:11",       desc:"Falar sobre Jesus com quem não conhece é natural pra você. Você consegue fazer isso de um jeito que não parece sermão — que faz sentido pra quem tá longe."},
- {id:15, name:"Pastoreio",     icon:"🌿", verse:"Efésios 4:11",       desc:"Você cuida das pessoas ao redor — não só dos seus próprios problemas. Consegue caminhar com alguém numa jornada longa sem desistir. As pessoas te contam coisas que não contam pra ninguém."},
- {id:16, name:"Hospitalidade", icon:"🏠", verse:"1 Pedro 4:9",        desc:"Você transforma qualquer ambiente num lugar onde as pessoas se sentem bem-vindas. Nota quem está sozinho. Vai até quem está desconfortável. Faz as pessoas sentirem que pertencem."},
+// ══ DATA ═══════════════════════════════════════════════════════════
+
+const BLOCK_COLORS = {
+  1:"#D4A853", 2:"#A78BFA", 3:"#FB923C", 4:"#34D399",
+  5:"#60A5FA", 6:"#F472B6", 7:"#38BDF8", 8:"#A3E635", 9:"#F43F5E"
+};
+
+const MINISTRY_DATA = {
+  apostolo: {
+    name:"Apóstolo", subtitle:"O Pioneiro do Reino",
+    color:"#D4A853", lightColor:"#F0C970",
+    bgColor:"rgba(212,168,83,0.07)", borderColor:"rgba(212,168,83,0.28)",
+    icon:"🌐",
+    intro:"Você foi feito para abrir caminhos. O apóstolo é movido por fronteiras — qualquer coisa que limite o avanço do reino o incomoda visceralmente. Você não consegue ficar parado enquanto há território por conquistar. Sua visão naturalmente supera o que existe e enxerga o que ainda pode ser.",
+    strengths:["Visão estratégica de longo prazo que outros não enxergam","Coragem genuína para entrar em território desconhecido","Capacidade de lançar e estabelecer estruturas novas do zero","Alta tolerância a ambiguidade, risco e incerteza"],
+    blindspots:["Impaciência com quem não acompanha o ritmo da visão","Tendência ao autoritarismo quando a visão está ameaçada","Dificuldade em cuidar das pessoas já alcançadas","Pode sacrificar relacionamentos pelo avanço da missão"],
+    biblical:"Paulo de Tarso",
+    verse:"Mas me esforcei por pregar o evangelho onde Cristo ainda não era conhecido, para não construir sobre o fundamento de outro.",
+    verseRef:"Romanos 15:20",
+    contribution:"Você é quem move o corpo de Cristo para frente. Sem apóstolos, a Igreja se acomoda e para. Com você, ela avança para onde ainda não chegou.",
+    shadow:"Sem supervisão do coração, o apóstolo pode se tornar um pioneiro solitário — deixando destruição relacional no caminho da visão.",
+    complements:["profeta","pastor"]
+  },
+  profeta: {
+    name:"Profeta", subtitle:"A Voz de Deus ao Presente",
+    color:"#A78BFA", lightColor:"#C4B5FD",
+    bgColor:"rgba(167,139,250,0.07)", borderColor:"rgba(167,139,250,0.28)",
+    icon:"🔥",
+    intro:"Você ouve o que outros não percebem. O profeta tem uma sensibilidade espiritual aguçada — percebe quando algo está errado antes mesmo de ter palavras para dizer, e sente compulsão de falar mesmo quando é inconveniente. Sua presença cria peso espiritual nos ambientes que você habita.",
+    strengths:["Discernimento espiritual apurado e confiável","Coragem para dizer verdades difíceis sem suavizar","Sensibilidade genuína à presença e voz de Deus","Capacidade de nomear o que está invisível para os outros"],
+    blindspots:["Pode ser percebido como duro, julgador ou inflexível","Dificuldade em equilibrar verdade com misericórdia pastoral","Tende ao isolamento quando não é compreendido","Pode exercer influência de forma intensa e desestabilizadora"],
+    biblical:"Jeremias",
+    verse:"Então, no meu coração havia como um fogo ardente, encerrado nos meus ossos; esforcei-me por retê-lo, mas não pude.",
+    verseRef:"Jeremias 20:9",
+    contribution:"Você impede que a Igreja perca a alma enquanto cresce. Sem profetas, a Igreja vira show. Com você, ela mantém o coração e a presença de Deus.",
+    shadow:"Sem pastoral, o profeta se torna um juiz que condena sem consolar — afastando as ovelhas em vez de guiá-las ao Pai.",
+    complements:["pastor","mestre"]
+  },
+  evangelista: {
+    name:"Evangelista", subtitle:"O Colhedor de Almas",
+    color:"#FB923C", lightColor:"#FCA570",
+    bgColor:"rgba(251,146,60,0.07)", borderColor:"rgba(251,146,60,0.28)",
+    icon:"✨",
+    intro:"Você não consegue olhar para uma pessoa sem pensar: ela precisa conhecer Jesus. O evangelista tem uma paixão visceral pelos perdidos — não como categoria teológica, mas como pessoas reais que você ama e quer ver alcançadas. Sua presença cria uma cultura de missão nos ambientes em que você vive.",
+    strengths:["Paixão contagiante e genuína pelos perdidos","Habilidade natural de comunicar o evangelho com clareza","Capacidade de mobilizar outros para a missão","Entusiasmo que cria cultura missionária ao redor de si"],
+    blindspots:["Impaciência com o processo lento do discipulado","Tendência à superficialidade em favor da acessibilidade","Dificuldade em cuidar profundamente dos já convertidos","Pode reduzir sucesso a números de decisões e conversões"],
+    biblical:"Filipe, o Evangelista",
+    verse:"O Espírito disse a Filipe: Aproxima-te e anda junto desse carro.",
+    verseRef:"Atos 8:29",
+    contribution:"Você é quem impede a Igreja de virar clube fechado. Sem evangelistas, ela para de crescer. Com você, ela nunca esquece para quem existe.",
+    shadow:"Sem profundidade, o evangelista produz decisões sem discipulado — colheitas que nunca amadurecem em frutos duradouros.",
+    complements:["pastor","mestre"]
+  },
+  pastor: {
+    name:"Pastor", subtitle:"O Guardião do Rebanho",
+    color:"#34D399", lightColor:"#6EE7B7",
+    bgColor:"rgba(52,211,153,0.07)", borderColor:"rgba(52,211,153,0.28)",
+    icon:"🌿",
+    intro:"Você se orienta por pessoas. O pastor sente as ovelhas — percebe quem está faltando, quem está mal, quem está prestes a desistir. Você cria o ambiente onde as pessoas se sentem seguras o suficiente para crescer. Sua presença diz sem palavras: você importa aqui, e não vamos deixar você para trás.",
+    strengths:["Sensibilidade genuína para as necessidades das pessoas","Habilidade de criar ambientes de cuidado e pertencimento","Fidelidade e comprometimento com quem está sob sua guarda","Capacidade de acompanhar processos lentos sem desistir"],
+    blindspots:["Dificuldade em confrontar para não machucar relacionamentos","Tendência à codependência emocional com as ovelhas","Pode proteger demais e impedir o crescimento necessário","Dificuldade em soltar quem precisa ser lançado para voar"],
+    biblical:"Barnabé",
+    verse:"Barnabé era um homem bom, cheio do Espírito Santo e de fé; e muita gente foi acrescentada ao Senhor.",
+    verseRef:"Atos 11:24",
+    contribution:"Você é o que faz as pessoas ficarem. Sem pastores, a Igreja cresce e perde todos ao mesmo tempo. Com você, ela retém, forma e transforma.",
+    shadow:"Sem fronteiras saudáveis, o pastor se esgota tentando salvar a todos — e eventualmente não consegue cuidar de ninguém bem.",
+    complements:["apostolo","mestre"]
+  },
+  mestre: {
+    name:"Mestre", subtitle:"O Construtor do Fundamento",
+    color:"#60A5FA", lightColor:"#93C5FD",
+    bgColor:"rgba(96,165,250,0.07)", borderColor:"rgba(96,165,250,0.28)",
+    icon:"📖",
+    intro:"Você não descansa enquanto houver confusão. O mestre precisa entender — e precisa que os outros entendam. Você enxerga as conexões que outros perdem, constrói estruturas de compreensão que sustentam a fé ao longo do tempo. Sua presença produz estabilidade e clareza nos ambientes em que você age.",
+    strengths:["Profundidade e rigor no estudo e ensino da Palavra","Capacidade de tornar o complexo verdadeiramente compreensível","Produz estabilidade doutrinária e maturidade espiritual duradoura","Memória teológica que protege a Igreja do erro e da heresia"],
+    blindspots:["Pode cair em intelectualismo sem transformação real","Frieza relacional — mais confortável com ideias do que com pessoas","Tende a valorizar o conhecimento acima do caráter e da experiência","Pode tornar o ensino inacessível para quem está começando"],
+    biblical:"Esdras",
+    verse:"Esdras tinha dedicado seu coração a estudar a lei do Senhor, a praticá-la e a ensinar os seus decretos e normas em Israel.",
+    verseRef:"Esdras 7:10",
+    contribution:"Você é o que faz tudo durar. Sem mestres, a Igreja cresce em largura mas não em profundidade. Com você, ela é edificada para suportar qualquer pressão.",
+    shadow:"Sem coração pastoral, o mestre produz pessoas que sabem muito sobre Deus mas têm dificuldade de se relacionar com Ele — e com os outros.",
+    complements:["profeta","evangelista"]
+  }
+};
+
+const QUESTIONS_RAW = [
+  // BLOCO 1 — Motivação
+  {block:1,blockName:"Motivação",blockIcon:"🔥",question:"O que mais te move no ministério?",options:[
+    {text:"Entrar onde o reino ainda não chegou e ver novas fronteiras sendo abertas",ministry:"apostolo"},
+    {text:"Falar com precisão e coragem o que Deus está dizendo agora",ministry:"profeta"},
+    {text:"Ver alguém encontrar Jesus pela primeira vez",ministry:"evangelista"},
+    {text:"Acompanhar alguém ao longo do tempo e vê-lo crescer",ministry:"pastor"},
+    {text:"Ajudar alguém a entender a Palavra de um jeito que muda tudo",ministry:"mestre"}
+  ]},
+  {block:1,blockName:"Motivação",blockIcon:"🔥",question:"Qual frase melhor resume sua definição de \"vitória\" no ministério?",options:[
+    {text:"\"Plantamos. Outros vão regar.\"",ministry:"apostolo"},
+    {text:"\"A Palavra de Deus foi dita com fidelidade, mesmo sendo difícil.\"",ministry:"profeta"},
+    {text:"\"Mais um entrou para o reino hoje.\"",ministry:"evangelista"},
+    {text:"\"Ninguém ficou para trás.\"",ministry:"pastor"},
+    {text:"\"Saíram sabendo mais do que chegaram — e isso vai durar.\"",ministry:"mestre"}
+  ]},
+  {block:1,blockName:"Motivação",blockIcon:"🔥",question:"O que mais te dá energia num dia de ministério?",options:[
+    {text:"Visitar um lugar novo e imaginar as possibilidades de avanço do reino",ministry:"apostolo"},
+    {text:"Orar, ouvir Deus e levar uma palavra precisa ao grupo",ministry:"profeta"},
+    {text:"Conversar com alguém que ainda não conhece Jesus",ministry:"evangelista"},
+    {text:"Estar presente e disponível para alguém que está passando por dificuldade",ministry:"pastor"},
+    {text:"Estudar profundamente um texto bíblico e preparar um ensino",ministry:"mestre"}
+  ]},
+  {block:1,blockName:"Motivação",blockIcon:"🔥",question:"Qual é o seu maior sonho para a Igreja?",options:[
+    {text:"Ver o evangelho alcançar cada nação, povo e língua",ministry:"apostolo"},
+    {text:"Ver a Igreja com vida espiritual genuína, onde Deus realmente se move",ministry:"profeta"},
+    {text:"Ver cada membro da Igreja ativamente fazendo discípulos",ministry:"evangelista"},
+    {text:"Ver uma Igreja onde as pessoas realmente se amam e cuidam umas das outras",ministry:"pastor"},
+    {text:"Ver uma Igreja teologicamente madura, que sabe o que crê e por quê",ministry:"mestre"}
+  ]},
+  // BLOCO 2 — Frustração
+  {block:2,blockName:"Frustração",blockIcon:"⚡",question:"O que mais te frustra na Igreja?",options:[
+    {text:"Estagnação — mesma estrutura, mesmos alcançados, sem expansão",ministry:"apostolo"},
+    {text:"Superficialidade — muito programa, pouca presença real de Deus",ministry:"profeta"},
+    {text:"Autocentrismo — uma Igreja fechada em si mesma, desconectada do mundo",ministry:"evangelista"},
+    {text:"Negligência — pessoas sendo ignoradas, sentindo que não pertencem",ministry:"pastor"},
+    {text:"Imprecisão — doutrinas mal fundamentadas sendo ensinadas como verdade",ministry:"mestre"}
+  ]},
+  {block:2,blockName:"Frustração",blockIcon:"⚡",question:"Qual comportamento em um líder mais te incomoda?",options:[
+    {text:"Medo de arriscar — liderar sem nunca sair da zona de conforto",ministry:"apostolo"},
+    {text:"Falta de integridade entre o que prega e o que vive",ministry:"profeta"},
+    {text:"Não ter nenhuma paixão pelos que estão fora da Igreja",ministry:"evangelista"},
+    {text:"Tratar pessoas como números, sem sensibilidade para o sofrimento",ministry:"pastor"},
+    {text:"Ensinar sem estudar, sendo superficial com a Palavra de Deus",ministry:"mestre"}
+  ]},
+  {block:2,blockName:"Frustração",blockIcon:"⚡",question:"O que mais te incomoda em uma reunião de célula ou pequeno grupo?",options:[
+    {text:"Ninguém faz convites e o grupo não cresce há meses",ministry:"apostolo"},
+    {text:"As discussões ficam rasas e ninguém realmente busca a Deus",ministry:"profeta"},
+    {text:"O grupo é fechado e desconfortável para quem vem de fora",ministry:"evangelista"},
+    {text:"Alguém está claramente mal e ninguém percebe ou pergunta",ministry:"pastor"},
+    {text:"A Bíblia é lida sem ser explicada, de forma rasa e sem contexto",ministry:"mestre"}
+  ]},
+  {block:2,blockName:"Frustração",blockIcon:"⚡",question:"Quando a Igreja passa por uma crise, o que mais te preocupa?",options:[
+    {text:"A missão ser paralisada por conflitos internos",ministry:"apostolo"},
+    {text:"A falta de discernimento espiritual sobre o que está acontecendo de verdade",ministry:"profeta"},
+    {text:"O impacto negativo na percepção de quem está de fora",ministry:"evangelista"},
+    {text:"As pessoas que estão se machucando no meio do processo",ministry:"pastor"},
+    {text:"A ausência de raciocínio claro e bíblico nas decisões sendo tomadas",ministry:"mestre"}
+  ]},
+  // BLOCO 3 — Liderança
+  {block:3,blockName:"Liderança",blockIcon:"👑",question:"Como você naturalmente funciona num time de liderança?",options:[
+    {text:"Lançando visão e movendo o grupo em direção a novas fronteiras",ministry:"apostolo"},
+    {text:"Trazendo clareza espiritual e discernimento nas decisões",ministry:"profeta"},
+    {text:"Animando e convocando o time para missão com entusiasmo genuíno",ministry:"evangelista"},
+    {text:"Cuidando da saúde relacional do time, garantindo que todos estão bem",ministry:"pastor"},
+    {text:"Organizando o pensamento e garantindo consistência nos processos",ministry:"mestre"}
+  ]},
+  {block:3,blockName:"Liderança",blockIcon:"👑",question:"Como você lida com alguém que está errando sob sua liderança?",options:[
+    {text:"Com clareza direta: identifica o problema e propõe um caminho novo",ministry:"apostolo"},
+    {text:"Com franqueza: nomeia o erro sem rodeios e chama ao arrependimento",ministry:"profeta"},
+    {text:"Tende a adiar o confronto porque prefere ganhar a pessoa a confrontá-la",ministry:"evangelista"},
+    {text:"Com muito cuidado emocional — teme machucar o relacionamento",ministry:"pastor"},
+    {text:"Com base na Palavra, mostrando de forma estruturada onde está o erro",ministry:"mestre"}
+  ]},
+  {block:3,blockName:"Liderança",blockIcon:"👑",question:"Qual é seu instinto ao desenvolver novos líderes?",options:[
+    {text:"Lançar logo — aprendem no campo, não na sala de aula",ministry:"apostolo"},
+    {text:"Verificar primeiro o caráter e a vida espiritual antes de lançar qualquer um",ministry:"profeta"},
+    {text:"Conectar com a missão — se amam os perdidos, o resto vem",ministry:"evangelista"},
+    {text:"Caminhar junto, acompanhar de perto, nunca largar antes da hora",ministry:"pastor"},
+    {text:"Treinar bem — líderes sem fundamento sólido fazem mais mal do que bem",ministry:"mestre"}
+  ]},
+  {block:3,blockName:"Liderança",blockIcon:"👑",question:"Ao delegar uma tarefa, o que mais importa para você?",options:[
+    {text:"Que a pessoa tenha iniciativa e não precise de supervisão constante",ministry:"apostolo"},
+    {text:"Que a pessoa tenha integridade e leve o ministério com seriedade",ministry:"profeta"},
+    {text:"Que a pessoa tenha coração pela missão e entusiasmo genuíno",ministry:"evangelista"},
+    {text:"Que a pessoa cuide bem das pessoas envolvidas, não só da tarefa",ministry:"pastor"},
+    {text:"Que a pessoa seja competente e execute com excelência e precisão",ministry:"mestre"}
+  ]},
+  // BLOCO 4 — A Palavra
+  {block:4,blockName:"A Palavra",blockIcon:"📖",question:"Quando você lê a Bíblia, o que mais te chama atenção?",options:[
+    {text:"Os movimentos de Deus na história, os pioneiros e as grandes viradas",ministry:"apostolo"},
+    {text:"As passagens de confronto, arrependimento e revelação de Deus",ministry:"profeta"},
+    {text:"As histórias de resgate — os perdidos que foram encontrados",ministry:"evangelista"},
+    {text:"Os textos de cuidado, misericórdia e comunidade",ministry:"pastor"},
+    {text:"As conexões entre textos, as estruturas teológicas e o contexto histórico",ministry:"mestre"}
+  ]},
+  {block:4,blockName:"A Palavra",blockIcon:"📖",question:"Com qual personagem bíblico você mais se identifica?",options:[
+    {text:"Paulo — pioneiro, plantador, enviado para territórios novos",ministry:"apostolo"},
+    {text:"Jeremias — fiel à voz de Deus mesmo quando foi muito caro",ministry:"profeta"},
+    {text:"Filipe — que deixou o avivamento para alcançar um único homem no deserto",ministry:"evangelista"},
+    {text:"Barnabé — que via potencial em todos e nunca desistia de ninguém",ministry:"pastor"},
+    {text:"Esdras — que se dedicou a estudar, praticar e ensinar a Lei de Deus",ministry:"mestre"}
+  ]},
+  {block:4,blockName:"A Palavra",blockIcon:"📖",question:"Qual tipo de pregação mais te alimenta quando você está na plateia?",options:[
+    {text:"Pregação visionária que expande horizontes e convoca para missão",ministry:"apostolo"},
+    {text:"Pregação que traz a presença de Deus e confronta com profundidade espiritual",ministry:"profeta"},
+    {text:"Pregação com paixão pelos perdidos e urgência genuína da missão",ministry:"evangelista"},
+    {text:"Pregação que cuida, consola e faz as pessoas se sentirem amadas por Deus",ministry:"pastor"},
+    {text:"Pregação com profundidade exegética que ensina algo novo com rigor",ministry:"mestre"}
+  ]},
+  // BLOCO 5 — Visão de Igreja
+  {block:5,blockName:"Visão de Igreja",blockIcon:"🏛",question:"Para você, uma Igreja verdadeiramente saudável é aquela que:",options:[
+    {text:"Está sempre em movimento — plantando, enviando, expandindo fronteiras",ministry:"apostolo"},
+    {text:"Tem cultura de buscar a Deus, ouvir sua voz e viver com integridade",ministry:"profeta"},
+    {text:"Cresce porque está genuinamente alcançando novos perdidos",ministry:"evangelista"},
+    {text:"É um lugar onde as pessoas se sentem amadas, conhecidas e cuidadas",ministry:"pastor"},
+    {text:"Tem membros que conhecem a Palavra e sabem o que creem e por quê",ministry:"mestre"}
+  ]},
+  {block:5,blockName:"Visão de Igreja",blockIcon:"🏛",question:"Qual é o maior risco para uma Igreja em crescimento?",options:[
+    {text:"Perder o espírito missionário e se tornar um clube de membros",ministry:"apostolo"},
+    {text:"Crescer sem a presença de Deus, apenas com técnica e produção",ministry:"profeta"},
+    {text:"Focar apenas nos que já estão dentro e esquecer os de fora",ministry:"evangelista"},
+    {text:"Crescer rápido demais sem estrutura de cuidado para os novos",ministry:"pastor"},
+    {text:"Crescer sem profundidade doutrinária, cheio de gente sem fundamento",ministry:"mestre"}
+  ]},
+  {block:5,blockName:"Visão de Igreja",blockIcon:"🏛",question:"Qual é a sua maior contribuição potencial para o corpo de Cristo?",options:[
+    {text:"Abrir caminhos que outros vão trilhar",ministry:"apostolo"},
+    {text:"Trazer clareza sobre o que Deus está realmente dizendo",ministry:"profeta"},
+    {text:"Conectar o corpo de Cristo à sua missão e ao mundo perdido",ministry:"evangelista"},
+    {text:"Criar o ambiente onde as pessoas querem ficar, crescer e se transformar",ministry:"pastor"},
+    {text:"Construir o alicerce teológico que faz tudo o mais durar",ministry:"mestre"}
+  ]},
+  // BLOCO 6 — Pessoas
+  {block:6,blockName:"Pessoas",blockIcon:"🤝",question:"Quando uma pessoa nova chega na sua comunidade, você instintivamente:",options:[
+    {text:"Pensa: onde essa pessoa pode ser lançada? Qual é o potencial dela?",ministry:"apostolo"},
+    {text:"Percebe imediatamente algo sobre o estado espiritual dela",ministry:"profeta"},
+    {text:"Se aproxima, conta sua história de fé e pergunta sobre a dela",ministry:"evangelista"},
+    {text:"Garante que ela seja acolhida, apresentada e não se sinta sozinha",ministry:"pastor"},
+    {text:"Quer entender o nível de conhecimento bíblico dela e o que ela precisa aprender",ministry:"mestre"}
+  ]},
+  {block:6,blockName:"Pessoas",blockIcon:"🤝",question:"Como as pessoas geralmente te descrevem?",options:[
+    {text:"Visionário e corajoso — às vezes impaciente com quem não acompanha o ritmo",ministry:"apostolo"},
+    {text:"Perspicaz e profundo — às vezes intenso ou difícil de agradar",ministry:"profeta"},
+    {text:"Entusiasmado e acessível — às vezes um pouco irrequieto ou superficial",ministry:"evangelista"},
+    {text:"Caloroso e confiável — às vezes difícil de dizer não",ministry:"pastor"},
+    {text:"Preciso e bem fundamentado — às vezes fechado demais nas próprias ideias",ministry:"mestre"}
+  ]},
+  {block:6,blockName:"Pessoas",blockIcon:"🤝",question:"Em uma conversa difícil com alguém que você lidera, você tende a:",options:[
+    {text:"Ir direto ao ponto e propor mudanças objetivas com clareza",ministry:"apostolo"},
+    {text:"Dizer a verdade sem rodeios, mesmo que seja desconfortável",ministry:"profeta"},
+    {text:"Tentar manter o clima leve e encontrar pontos de concordância",ministry:"evangelista"},
+    {text:"Ouvir muito antes de falar qualquer coisa, priorizando o cuidado",ministry:"pastor"},
+    {text:"Referenciar princípios bíblicos e mostrar onde está o erro de forma estruturada",ministry:"mestre"}
+  ]},
+  {block:6,blockName:"Pessoas",blockIcon:"🤝",question:"Qual é o seu maior desafio no relacionamento com o corpo de Cristo?",options:[
+    {text:"Ter paciência com quem não tem a mesma urgência ou visão de avanço",ministry:"apostolo"},
+    {text:"Ser compreendido por pessoas que preferem conforto à honestidade",ministry:"profeta"},
+    {text:"Ser levado a sério por líderes que não compartilham a mesma paixão pelos perdidos",ministry:"evangelista"},
+    {text:"Saber confrontar sem perder o relacionamento",ministry:"pastor"},
+    {text:"Conectar o que sei com a vida prática das pessoas de forma relevante",ministry:"mestre"}
+  ]},
+  // BLOCO 7 — Oração e Espiritualidade
+  {block:7,blockName:"Oração e Espiritualidade",blockIcon:"🕊",question:"Como você geralmente ora?",options:[
+    {text:"Com visão — intercedo por territórios, movimentos e avanço do reino",ministry:"apostolo"},
+    {text:"Com atenção — ouço mais do que falo, esperando ouvir algo específico de Deus",ministry:"profeta"},
+    {text:"Com urgência — oro pelos perdidos, pelas colheitas, pelos que ainda não vieram",ministry:"evangelista"},
+    {text:"Com cuidado — levo cada pessoa pelo nome, suas dores e necessidades",ministry:"pastor"},
+    {text:"Com estrutura — oro pelas Escrituras, confessando a Palavra sobre cada situação",ministry:"mestre"}
+  ]},
+  {block:7,blockName:"Oração e Espiritualidade",blockIcon:"🕊",question:"Para você, o sinal mais claro de vida espiritual genuína em alguém é:",options:[
+    {text:"Disposição de se arriscar por Deus sem garantias de resultado",ministry:"apostolo"},
+    {text:"Sensibilidade espiritual — perceber a Deus no cotidiano e ouvir sua voz",ministry:"profeta"},
+    {text:"Paixão pelos perdidos que se traduz em ação missionária real",ministry:"evangelista"},
+    {text:"Capacidade de amar pessoas difíceis com consistência ao longo do tempo",ministry:"pastor"},
+    {text:"Conhecimento da Palavra que se traduz em sabedoria prática e obediência",ministry:"mestre"}
+  ]},
+  {block:7,blockName:"Oração e Espiritualidade",blockIcon:"🕊",question:"Como você descreveria sua espiritualidade em uma palavra ou frase?",options:[
+    {text:"Ativa e orientada por missão — Deus me fala enquanto ajo",ministry:"apostolo"},
+    {text:"Contemplativa e sensível — sempre atento ao que Deus está movendo",ministry:"profeta"},
+    {text:"Entusiasta e relacional — minha espiritualidade transborda para as pessoas",ministry:"evangelista"},
+    {text:"Fiel e constante — não tenho grandes altos e baixos, caminho devagar mas não paro",ministry:"pastor"},
+    {text:"Reflexiva e fundamentada — crescimento vem de entendimento e clareza",ministry:"mestre"}
+  ]},
+  // BLOCO 8 — Discipulado
+  {block:8,blockName:"Discipulado",blockIcon:"🌱",question:"Qual é sua visão de como uma pessoa cresce espiritualmente?",options:[
+    {text:"No campo — desafios reais e responsabilidades que ela não pode fugir",ministry:"apostolo"},
+    {text:"No encontro — momentos profundos com Deus que a transformam por dentro",ministry:"profeta"},
+    {text:"Na missão — quando ela começa a discipular outros é que realmente cresce",ministry:"evangelista"},
+    {text:"No relacionamento — crescemos sendo amados e amando, não em solidão",ministry:"pastor"},
+    {text:"No ensino — a mente transformada pela Palavra produz vida transformada",ministry:"mestre"}
+  ]},
+  {block:8,blockName:"Discipulado",blockIcon:"🌱",question:"O que mais te frustrou em uma relação de discipulado?",options:[
+    {text:"Discipular alguém que cresceu mas se recusa a sair da própria zona de conforto",ministry:"apostolo"},
+    {text:"Investir em alguém que não tem integridade no que vive fora da Igreja",ministry:"profeta"},
+    {text:"Discipular alguém que nunca evangelizou, mesmo após anos de fé",ministry:"evangelista"},
+    {text:"Perder alguém que você acompanhou por muito tempo para o mundo ou para outra igreja",ministry:"pastor"},
+    {text:"Discipular alguém que memoriza conceitos mas não os aplica na vida real",ministry:"mestre"}
+  ]},
+  {block:8,blockName:"Discipulado",blockIcon:"🌱",question:"Qual é o sinal de que seu discipulado funcionou de verdade?",options:[
+    {text:"A pessoa está lançando outros e expandindo o reino por conta própria",ministry:"apostolo"},
+    {text:"A pessoa tem sensibilidade espiritual apurada e caráter íntegro",ministry:"profeta"},
+    {text:"A pessoa está discipulando outros ativamente com paixão pela missão",ministry:"evangelista"},
+    {text:"A pessoa cuida profundamente das pessoas ao seu redor com constância",ministry:"pastor"},
+    {text:"A pessoa conhece a Palavra e pensa teologicamente por conta própria",ministry:"mestre"}
+  ]},
+  {block:8,blockName:"Discipulado",blockIcon:"🌱",question:"O que você priorizaria nos primeiros 3 meses com alguém que quer crescer?",options:[
+    {text:"Lançar em alguma responsabilidade real o quanto antes possível",ministry:"apostolo"},
+    {text:"Estabelecer disciplinas espirituais sólidas — oração, jejum, ouvir Deus",ministry:"profeta"},
+    {text:"Levá-la para evangelizar e mostrar que ela pode com seus próprios olhos",ministry:"evangelista"},
+    {text:"Construir confiança e segurança — primeiro ela precisa saber que é amada",ministry:"pastor"},
+    {text:"Ensiná-la a estudar a Bíblia por conta própria com método sólido e consistente",ministry:"mestre"}
+  ]},
+  // BLOCO 9 — Conflito e Pressão
+  {block:9,blockName:"Conflito e Pressão",blockIcon:"⚔",question:"Como você reage quando um projeto que você liderava falha?",options:[
+    {text:"Analiso o que deu errado, ajusto a estratégia e tento de novo — o mais rápido possível",ministry:"apostolo"},
+    {text:"Processo espiritualmente: o que Deus estava dizendo que eu não ouvi?",ministry:"profeta"},
+    {text:"Me recupero rápido — há outros campos, outras portas, outra colheita esperando",ministry:"evangelista"},
+    {text:"Me preocupo mais com como as pessoas envolvidas estão do que com o projeto em si",ministry:"pastor"},
+    {text:"Faço uma análise profunda das causas — não quero repetir o mesmo erro jamais",ministry:"mestre"}
+  ]},
+  {block:9,blockName:"Conflito e Pressão",blockIcon:"⚔",question:"Quando alguém te critica duramente em público, sua reação instintiva é:",options:[
+    {text:"Manter a postura e não deixar a visão ser desacreditada por um ataque pessoal",ministry:"apostolo"},
+    {text:"Avaliar se há verdade na crítica — às vezes quem te confronta tem razão",ministry:"profeta"},
+    {text:"Tentar desacelerar o conflito e recuperar o ambiente antes que piore",ministry:"evangelista"},
+    {text:"Sentir mais pela relação rompida do que pela crítica em si",ministry:"pastor"},
+    {text:"Processar internamente antes de responder — precisa pensar antes de falar qualquer coisa",ministry:"mestre"}
+  ]},
+  {block:9,blockName:"Conflito e Pressão",blockIcon:"⚔",question:"O que mais te fortalece nos momentos de maior pressão no ministério?",options:[
+    {text:"A clareza da visão — saber por que estou aqui me mantém de pé quando tudo oscila",ministry:"apostolo"},
+    {text:"A certeza de que ouvi Deus — se Ele disse, eu vou até o fim independente do custo",ministry:"profeta"},
+    {text:"O entusiasmo da missão — há almas esperando, e isso é grande demais para parar",ministry:"evangelista"},
+    {text:"Os rostos das pessoas — lembro de quem foi transformado e sei que vale cada custo",ministry:"pastor"},
+    {text:"O fundamento da Palavra — o que é verdade não muda com a pressão ou com o tempo",ministry:"mestre"}
+  ]}
 ];
 
-const questions=[
- {id:1,  giftId:1,  text:"Na hora que a galera tá fazendo algo errado ou injusto, você fala — mesmo sabendo que pode ser chato?"},
- {id:2,  giftId:1,  text:"Já aconteceu de você falar algo pra alguém e a pessoa ficar tipo 'cara, como você sabia?' — como se você tivesse acertado em cheio?"},
- {id:3,  giftId:2,  text:"Quando você vê algo precisando ser feito, você já vai lá e faz — sem esperar ninguém pedir?"},
- {id:4,  giftId:2,  text:"Você curte fazer as coisas que ninguém vê — organizar, preparar, arrumar — mesmo sem receber crédito por isso?"},
- {id:5,  giftId:3,  text:"Quando você entende uma matéria ou assunto, você fica com vontade de explicar pros outros de um jeito que eles peguem de verdade?"},
- {id:6,  giftId:3,  text:"Seus amigos te chamam pra explicar as coisas quando não entenderam — porque sabem que você vai explicar de um jeito que eles vão entender?"},
- {id:7,  giftId:4,  text:"Quando um amigo tá no fundo do poço, você naturalmente quer falar algo que levante ele — não só um 'vai ficar bem'?"},
- {id:8,  giftId:4,  text:"As pessoas da sua vida te procuram quando estão passando mal — não pra você resolver o problema, mas porque falar com você já ajuda?"},
- {id:9,  giftId:5,  text:"Quando você tem grana, tempo ou energia sobrando, seu instinto é usar pra ajudar alguém — não guardar só pra você?"},
- {id:10, giftId:5,  text:"Você sente uma alegria real quando ajuda alguém — especialmente quando consegue fazer isso sem precisar que todo mundo saiba?"},
- {id:11, giftId:6,  text:"Quando o grupo tá todo mundo perdido sem saber o que fazer, você é o tipo que começa a organizar e dar uma direção?"},
- {id:12, giftId:6,  text:"Você consegue enxergar o que precisa acontecer pra uma situação funcionar — e tem facilidade de montar um plano e colocar em prática?"},
- {id:13, giftId:7,  text:"Quando alguém tá sofrendo, você sente que o mais importante é estar do lado — não necessariamente resolver, só estar?"},
- {id:14, giftId:7,  text:"Quando você vê alguém sozinho ou triste — mesmo sem conhecer direito — você sente dificuldade de simplesmente ignorar?"},
- {id:15, giftId:8,  text:"Quando o rolo começa e ninguém sabe o que fazer, você costuma ter uma clareza do que seria o melhor caminho?"},
- {id:16, giftId:8,  text:"Seus amigos ou família te pedem opinião em decisões importantes — não só porque você é amigo, mas porque confiam no seu julgamento?"},
- {id:17, giftId:9,  text:"Já teve a sensação de saber algo sobre uma pessoa ou situação sem ter como explicar de onde veio esse conhecimento?"},
- {id:18, giftId:9,  text:"Você já sentiu que Deus colocou no seu coração algo específico sobre alguém — uma impressão, um pensamento — e quando você orou ou falou, fez sentido?"},
- {id:19, giftId:10, text:"Quando todo mundo ao redor tá duvidando que algo vai dar certo, você consegue manter uma confiança tranquila de que Deus vai aparecer?"},
- {id:20, giftId:10, text:"As pessoas da sua vida falam de você como alguém que não desiste de crer — mesmo quando a situação parece perdida?"},
- {id:21, giftId:11, text:"Quando alguém tá doente ou machucado, você sente uma vontade forte de orar por essa pessoa — com uma fé real de que Deus pode agir?"},
- {id:22, giftId:11, text:"Você sente uma compaixão diferente por pessoas que estão doentes — e uma fé específica de que Deus pode intervir quando você ora por elas?"},
- {id:23, giftId:12, text:"Você tem uma confiança real de que Deus pode fazer acontecer o que parece impossível — não só no discurso, mas de verdade?"},
- {id:24, giftId:12, text:"Você já viveu uma situação em que claramente não tinha explicação natural pro que aconteceu — e você estava no meio disso?"},
- {id:25, giftId:13, text:"Você costuma perceber quando tem algo espiritualmente errado numa situação, mesmo quando na superfície tudo parece normal?"},
- {id:26, giftId:13, text:"Quando o grupo percebe que tem algo errado mas ninguém consegue apontar o quê, as pessoas olham pra você pra ler a situação?"},
- {id:27, giftId:14, text:"Você tem facilidade de falar sobre Jesus com pessoas que não têm fé — sem travar, sem precisar de um roteiro?"},
- {id:28, giftId:14, text:"Você consegue falar sobre fé de um jeito que faz sentido pra quem tá longe de Deus — sem soar como sermão e sem travar?"},
- {id:29, giftId:15, text:"Você sente uma responsabilidade natural pelo crescimento espiritual das pessoas ao seu redor — não só pelos seus próprios problemas?"},
- {id:30, giftId:15, text:"As pessoas costumam te contar coisas que não contam pra todo mundo — segredos, dores profundas — porque sentem que você realmente se importa?"},
- {id:31, giftId:16, text:"Você curte receber pessoas, criar um ambiente gostoso — e sente algo especial quando consegue fazer alguém se sentir em casa?"},
- {id:32, giftId:16, text:"Você nota quando alguém está sozinho ou desconfortável num ambiente — e seu instinto é ir até essa pessoa antes que alguém precise pedir?"},
-];
+// ══ STATE ══════════════════════════════════════════════════════════
+let questions = [];
+let currentQ = 0;
+let answers = {};
+let selectedMinistry = null;
+let scores = {};
 
-const labels=["Não sou assim","Raramente","Às vezes","Frequentemente","Sou assim"];
-
-let screen='intro', current=0, answers={}, sel=null, busy=false;
-
-function scores(){
-  const s={};
-  gifts.forEach(g=>s[g.id]=0);
-  questions.forEach(q=>{if(answers[q.id])s[q.giftId]+=answers[q.id];});
-  return s;
-}
-function sorted(){
-  const s=scores();
-  return [...gifts].map(g=>({...g,score:s[g.id]})).sort((a,b)=>b.score-a.score);
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
 }
 
-function renderIntro(){
-  return`<div class="intro-wrap">
-  <span class="flama-wordmark">Flama · Ep. 04</span>
-  <h1 class="intro-title">QUAL É<br>O SEU<br><span class="highlight">DOM?</span></h1>
-  <p class="intro-sub">Farmando Aura com o Apóstolo Paulo</p>
-  <div class="divider-line"></div>
-  <p class="info-block">
-    <strong>32 perguntas · uns 5 minutinhos</strong><br>
-    Pra cada pergunta, escolhe de <strong>1</strong> (não sou assim) a <strong>5</strong> (sou exatamente assim).<br>
-    Responde com o que é verdade hoje — não tem resposta certa ou errada.
-  </p>
-  <button class="btn-primary" onclick="start()">Começar →</button>
-</div>`;
+// ══ INIT ═══════════════════════════════════════════════════════════
+function init() {
+  // Build ministry preview
+  const preview = document.getElementById('ministry-preview');
+  Object.values(MINISTRY_DATA).forEach(m => {
+    preview.innerHTML += `
+      <div class="ministry-badge">
+        <div class="ministry-badge-icon" style="background:${m.bgColor};border:1px solid ${m.borderColor};">${m.icon}</div>
+        <span class="ministry-badge-name" style="color:${m.color};">${m.name.toUpperCase()}</span>
+      </div>`;
+  });
+  // Shuffle questions
+  questions = QUESTIONS_RAW.map(q => ({...q, options: shuffle([...q.options])}));
 }
 
-function renderQuiz(){
-  const q=questions[current];
-  const pct=Math.round((current/questions.length)*100);
-  const opts=labels.map((l,i)=>{
-    const v=i+1;
-    const cls='scale-btn'+(sel===v?' selected':sel!==null?' dimmed':'');
-    return`<button class="${cls}" onclick="pick(${v})">
-      <span class="scale-label">${l}</span>
-      <span class="scale-num">${v}</span>
-    </button>`;
-  }).join('');
-  return`<div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-<div class="quiz-wrap">
-  <div class="q-meta">
-    <span class="q-num">${current+1} <span style="color:var(--text-3)">/ ${questions.length}</span></span>
-    <span>${pct}% concluído</span>
-  </div>
-  <p class="q-text slide-in">${q.text}</p>
-  <div class="scale-options">${opts}</div>
-</div>`;
+// ══ QUIZ LOGIC ═════════════════════════════════════════════════════
+function startQuiz() {
+  showScreen('screen-quiz');
+  currentQ = 0;
+  answers = {};
+  renderQuestion();
 }
 
-function renderResults(){
-  const all=sorted();
-  const top=all[0];
-  const second=all[1];
-  const third=all[2];
-  const topPct=Math.round((top.score/10)*100);
-  const secPct=Math.round((second.score/10)*100);
-  const thiPct=Math.round((third.score/10)*100);
+function renderQuestion() {
+  const q = questions[currentQ];
+  const total = questions.length;
+  const pct = (currentQ/total)*100;
+  const bc = BLOCK_COLORS[q.block];
 
-  const rows=all.map((g,i)=>{
-    const pct=Math.round((g.score/10)*100);
-    const fill=i<3?'#1A1A18':'#C8C7BE';
-    return`<div class="score-row">
-  <span class="si">${g.icon}</span>
-  <span class="sn">${g.name}</span>
-  <div class="sb"><div class="sf" style="width:${pct}%;background:${fill}"></div></div>
-  <span class="sv">${g.score}</span>
-</div>`;
-  }).join('');
+  // Progress
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-fill').style.background = `linear-gradient(90deg,#D4A853,${bc})`;
 
-  return`<div class="results-wrap">
-  <p class="results-eyebrow">Seu resultado</p>
-  <h1 class="results-title">SEU<br>PERFIL<br><span class="highlight">DE DONS</span></h1>
-  <p class="results-sub">Seus três dons com maior pontuação</p>
+  // Meta
+  document.getElementById('block-icon').textContent = q.blockIcon;
+  document.getElementById('block-name').textContent = `BLOCO ${q.block} · ${q.blockName.toUpperCase()}`;
+  document.getElementById('block-name').style.color = bc;
+  document.getElementById('q-counter').textContent = `${currentQ+1} / ${total}`;
 
-  <div class="result-card-hero">
-    <div class="hero-badge">⭐ Dom principal</div>
-    <div class="hero-header">
-      <span class="hero-icon">${top.icon}</span>
-      <span class="hero-name">${top.name.toUpperCase()}</span>
-      <span class="hero-score">${top.score}/10</span>
-    </div>
-    <div class="score-bar"><div class="score-fill" style="width:${topPct}%"></div></div>
-    <p class="hero-desc">${top.desc}</p>
-    <p class="hero-verse">${top.verse}</p>
-  </div>
+  // Question
+  const qText = document.getElementById('question-text');
+  qText.classList.add('hidden');
+  setTimeout(() => {
+    qText.textContent = q.question;
+    qText.classList.remove('hidden');
+  }, 180);
 
-  <div class="result-card">
-    <div class="card-header">
-      <span class="card-icon">${second.icon}</span>
-      <span class="card-name">${second.name}</span>
-      <span class="card-score">${second.score}/10</span>
-    </div>
-    <div class="card-score-bar"><div class="card-score-fill" style="width:${secPct}%"></div></div>
-    <p class="card-desc">${second.desc}</p>
-    <p class="card-verse">${second.verse}</p>
-  </div>
+  // Options
+  const letters = ['A','B','C','D','E'];
+  const list = document.getElementById('options-list');
+  list.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span><span>${opt.text}</span>`;
+    btn.onclick = () => selectOption(btn, opt.ministry);
+    list.appendChild(btn);
+  });
 
-  <div class="result-card">
-    <div class="card-header">
-      <span class="card-icon">${third.icon}</span>
-      <span class="card-name">${third.name}</span>
-      <span class="card-score">${third.score}/10</span>
-    </div>
-    <div class="card-score-bar"><div class="card-score-fill" style="width:${thiPct}%"></div></div>
-    <p class="card-desc">${third.desc}</p>
-    <p class="card-verse">${third.verse}</p>
-  </div>
+  // Next button
+  const btnNext = document.getElementById('btn-next');
+  btnNext.disabled = true;
+  btnNext.textContent = currentQ < total-1 ? 'PRÓXIMA →' : 'VER RESULTADO →';
+  selectedMinistry = null;
 
-  <p class="results-note">Isso não é um limite — é um ponto de partida. Dons crescem com o uso. Compartilha o resultado com seu líder e conversa sobre o que você descobriu!</p>
-
-  <button class="btn-ghost" onclick="toggle()" id="tbtn" style="margin-bottom:0.5rem">ver pontuação dos 16 dons</button>
-  <div class="all-scores-panel" id="apanel">
-    <div style="margin:0.5rem 0 0.75rem">${rows}</div>
-  </div>
-  <div style="height:0.5rem"></div>
-  <button class="btn-ghost" onclick="restart()">refazer o teste</button>
-
-  <p class="footer-quote">
-    "A cada um é dada a manifestação do Espírito para o proveito de todos."
-    <cite>— 1 Coríntios 12:7</cite>
-  </p>
-</div>`;
+  // Block dots
+  renderDots(q.block);
 }
 
-function render(){
-  const app=document.getElementById('app');
-  if(screen==='intro') app.innerHTML=renderIntro();
-  else if(screen==='quiz') app.innerHTML=renderQuiz();
-  else app.innerHTML=renderResults();
-  window.scrollTo({top:0,behavior:'instant'});
+function selectOption(btn, ministry) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedMinistry = ministry;
+  document.getElementById('btn-next').disabled = false;
 }
-function start(){ screen='quiz'; render(); }
-function pick(v){
-  if(busy) return;
-  busy=true; sel=v; render();
-  setTimeout(()=>{
-    answers[questions[current].id]=v;
-    sel=null; busy=false;
-    if(current+1<questions.length){ current++; render(); }
-    else{ screen='results'; render(); }
-  },340);
+
+function nextQuestion() {
+  if (!selectedMinistry) return;
+  answers[currentQ] = selectedMinistry;
+  if (currentQ < questions.length-1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    calculateResults();
+  }
 }
-function toggle(){
-  const p=document.getElementById('apanel');
-  const b=document.getElementById('tbtn');
-  const open=p.style.display==='block';
-  p.style.display=open?'none':'block';
-  b.textContent=open?'ver pontuação dos 16 dons':'ocultar pontuação completa';
+
+function renderDots(currentBlock) {
+  const container = document.getElementById('block-dots');
+  container.innerHTML = '';
+  for (let b = 1; b <= 9; b++) {
+    const dot = document.createElement('div');
+    dot.className = 'block-dot';
+    dot.style.background = b <= currentBlock ? BLOCK_COLORS[b] : 'rgba(255,255,255,0.08)';
+    dot.style.width = b === currentBlock ? '24px' : b < currentBlock ? '16px' : '6px';
+    container.appendChild(dot);
+  }
 }
-function restart(){
-  answers={}; current=0; sel=null; busy=false;
-  screen='intro'; render();
+
+// ══ RESULTS ════════════════════════════════════════════════════════
+function calculateResults() {
+  const s = {apostolo:0,profeta:0,evangelista:0,pastor:0,mestre:0};
+  Object.values(answers).forEach(m => s[m]++);
+  scores = s;
+  showScreen('screen-results');
+  renderResults();
 }
-render();
+
+function renderResults() {
+  const total = Object.values(scores).reduce((a,b)=>a+b,0);
+  const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const primaryKey = sorted[0][0];
+  const secondaryKey = sorted[1][0];
+  const pd = MINISTRY_DATA[primaryKey];
+  const sd = MINISTRY_DATA[secondaryKey];
+
+  // Header
+  document.getElementById('result-header').innerHTML = `
+    <p class="label" style="margin-bottom:18px;">SEU MINISTÉRIO</p>
+    <div class="result-icon" style="background:${pd.bgColor};border:2px solid ${pd.borderColor};box-shadow:0 0 40px ${pd.bgColor};">${pd.icon}</div>
+    <p class="result-ministry-name" style="color:${pd.color};">${pd.name}</p>
+    <p class="result-subtitle">${pd.subtitle}</p>
+    <div class="result-score-badge" style="background:${pd.bgColor};border:1px solid ${pd.borderColor};">
+      <span class="result-score-num" style="color:${pd.color};">${scores[primaryKey]}</span>
+      <span class="result-score-denom">/ ${total} respostas</span>
+    </div>`;
+
+  // Tabs
+  const tabDefs = [
+    {id:'perfil',label:'PERFIL'},
+    {id:'forcas',label:'PONTOS FORTES'},
+    {id:'cegos',label:'PONTOS CEGOS'},
+    {id:'pontuacao',label:'PONTUAÇÃO'}
+  ];
+  const tabsEl = document.getElementById('tabs');
+  const panelsEl = document.getElementById('tab-panels');
+  tabsEl.innerHTML = '';
+  panelsEl.innerHTML = '';
+
+  tabDefs.forEach((t,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i===0?' active':'');
+    btn.textContent = t.label;
+    btn.onclick = () => switchTab(t.id);
+    tabsEl.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.id = 'panel-'+t.id;
+    panel.className = 'tab-panel' + (i===0?' active':'');
+    panel.innerHTML = buildPanel(t.id, pd, sd, sorted, total, secondaryKey);
+    panelsEl.appendChild(panel);
+  });
+
+  // Animate bars after render
+  setTimeout(() => {
+    sorted.forEach(([key]) => {
+      const fill = document.getElementById('bar-'+key);
+      if (fill) fill.style.width = ((scores[key]/total)*100)+'%';
+    });
+  }, 120);
+}
+
+function buildPanel(id, pd, sd, sorted, total, secondaryKey) {
+  if (id === 'perfil') {
+    const comps = pd.complements.map(c => {
+      const cd = MINISTRY_DATA[c];
+      return `<div class="complement-card" style="background:${cd.bgColor};border:1px solid ${cd.borderColor};">
+        <span class="complement-icon">${cd.icon}</span>
+        <div>
+          <div class="complement-name" style="color:${cd.color};">${cd.name}</div>
+          <div class="complement-sub">${cd.subtitle}</div>
+        </div>
+      </div>`;
+    }).join('');
+    return `
+      <div class="card-colored" style="background:${pd.bgColor};border:1px solid ${pd.borderColor};">
+        <p style="font-size:19px;line-height:1.85;color:rgba(232,224,208,0.88);">${pd.intro}</p>
+      </div>
+      <div class="verse-block" style="border-color:${pd.color};">
+        <p class="verse-text">"${pd.verse}"</p>
+        <p class="verse-ref">${pd.verseRef.toUpperCase()} · PERSONAGEM: ${pd.biblical.toUpperCase()}</p>
+      </div>
+      <div class="card">
+        <p class="card-label">SUA CONTRIBUIÇÃO AO CORPO</p>
+        <p class="card-text">${pd.contribution}</p>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <p class="card-label">COMPLEMENTOS IDEAIS</p>
+        <div class="complements-row">${comps}</div>
+      </div>
+      <div class="secondary-card" style="background:${sd.bgColor};border:1px solid ${sd.borderColor};">
+        <p class="card-label" style="margin-bottom:12px;">MINISTÉRIO SECUNDÁRIO</p>
+        <div class="secondary-row">
+          <span class="secondary-icon">${sd.icon}</span>
+          <div class="secondary-info">
+            <div class="secondary-name" style="color:${sd.color};">${sd.name}</div>
+            <div class="secondary-sub">${sd.subtitle}</div>
+          </div>
+          <span class="secondary-pts" style="color:${sd.color};">${scores[secondaryKey]}pts</span>
+        </div>
+      </div>`;
+  }
+  if (id === 'forcas') {
+    const items = pd.strengths.map((s,i) => `
+      <div class="strength-item" style="background:rgba(255,255,255,0.02);border:1px solid ${pd.borderColor};">
+        <span class="item-num" style="color:${pd.color};">0${i+1}</span>
+        <span class="item-text">${s}</span>
+      </div>`).join('');
+    const comps = pd.complements.map(c=>`<span style="color:${pd.lightColor};font-style:italic;">${MINISTRY_DATA[c].name}</span>`).join(' e ');
+    return `
+      <p style="font-size:18px;color:rgba(232,224,208,0.5);margin-bottom:26px;font-style:italic;line-height:1.6;">
+        Estas são as graças que Cristo deposita através de você no seu corpo:
+      </p>
+      ${items}
+      <div class="card-colored" style="background:${pd.bgColor};border:1px solid ${pd.borderColor};margin-top:28px;">
+        <p class="card-label" style="color:${pd.color};">SEUS DONS SÃO MAXIMIZADOS AO LADO DE</p>
+        <p style="font-size:18px;line-height:1.7;">Seus pontos fortes ganham força ao lado de ${comps} — juntos, vocês cobrem os ângulos que nenhum ministério cobre sozinho.</p>
+      </div>`;
+  }
+  if (id === 'cegos') {
+    const items = pd.blindspots.map((s,i) => `
+      <div class="blind-item" style="background:rgba(255,255,255,0.015);border:1px solid rgba(255,120,120,0.1);">
+        <span class="item-num" style="color:rgba(255,160,160,0.5);">0${i+1}</span>
+        <span class="item-text">${s}</span>
+      </div>`).join('');
+    return `
+      <p style="font-size:18px;color:rgba(232,224,208,0.5);margin-bottom:26px;font-style:italic;line-height:1.6;">
+        Todo ministério tem sua sombra. Conhecê-la é o primeiro passo para não ser governado por ela:
+      </p>
+      ${items}
+      <div class="shadow-card" style="background:rgba(255,100,100,0.04);border:1px solid rgba(255,120,120,0.14);">
+        <p class="shadow-label" style="color:rgba(255,160,160,0.6);">A SOMBRA DO ${pd.name.toUpperCase()}</p>
+        <p class="shadow-text">${pd.shadow}</p>
+      </div>`;
+  }
+  if (id === 'pontuacao') {
+    const rows = sorted.map(([key,score],i) => {
+      const md = MINISTRY_DATA[key];
+      const pct = Math.round((score/total)*100);
+      const badge = i===0 ? `<span class="score-badge" style="color:${md.color};background:${md.bgColor};border:1px solid ${md.borderColor};">PRINCIPAL</span>` : '';
+      return `
+        <div class="score-row">
+          <div class="score-row-top">
+            <div class="score-ministry">
+              <span style="font-size:21px;">${md.icon}</span>
+              <span class="score-name" style="color:${md.color};">${md.name.toUpperCase()}</span>
+              ${badge}
+            </div>
+            <span class="score-val">${score} · ${pct}%</span>
+          </div>
+          <div class="score-track">
+            <div class="score-fill" id="bar-${key}" style="background:linear-gradient(90deg,${md.color},${md.lightColor});"></div>
+          </div>
+        </div>`;
+    }).join('');
+    const diff = sorted[0][1] - sorted[1][1];
+    const p1 = MINISTRY_DATA[sorted[0][0]].name;
+    const p2 = MINISTRY_DATA[sorted[1][0]].name;
+    let interpretation = '';
+    if (diff >= 6) interpretation = `Você tem um perfil vocacional muito bem definido — seu ministério de ${p1} é claramente dominante. Isso indica clareza e foco vocacional.`;
+    else if (diff >= 3) interpretation = `Você tem um perfil primário claro com uma influência secundária significativa de ${p2}. Essa combinação cria uma contribuição rica e multifacetada.`;
+    else interpretation = `Seus dois principais ministérios (${p1} e ${p2}) estão muito próximos. Isso pode indicar um ministério de transição ou uma vocação que integra essas duas graças com equilíbrio.`;
+    return `
+      <p style="font-size:18px;color:rgba(232,224,208,0.5);margin-bottom:32px;font-style:italic;">
+        Sua distribuição entre os cinco ministérios:
+      </p>
+      ${rows}
+      <div class="dist-card">
+        <p class="card-label">LEITURA DA DISTRIBUIÇÃO</p>
+        <p style="font-size:18px;line-height:1.8;color:rgba(232,224,208,0.72);margin-top:12px;">${interpretation}</p>
+      </div>`;
+  }
+  return '';
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['perfil','forcas','cegos','pontuacao'][i]===id);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id==='panel-'+id);
+  });
+  // Re-trigger bar animations when switching to score tab
+  if (id === 'pontuacao') {
+    const total = Object.values(scores).reduce((a,b)=>a+b,0);
+    setTimeout(() => {
+      Object.entries(scores).forEach(([key,score]) => {
+        const fill = document.getElementById('bar-'+key);
+        if (fill) fill.style.width = ((score/total)*100)+'%';
+      });
+    }, 60);
+  }
+}
+
+function restartQuiz() {
+  currentQ = 0; answers = {}; selectedMinistry = null; scores = {};
+  questions = QUESTIONS_RAW.map(q => ({...q, options: shuffle([...q.options])}));
+  showScreen('screen-intro');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ══ BOOT ═══════════════════════════════════════════════════════════
+init();
 </script>
 </body>
 </html>
